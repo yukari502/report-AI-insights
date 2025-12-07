@@ -1,6 +1,15 @@
 {
   "crawled_urls": {
     "http://clientportal.ibb.ubs.com": "2025-12-07",
+    "https://business.bofa.com/en-us/content/market-strategies-insights/weekly-market-recap-report.html": "2025-12-07",
+    "https://www.federalreserve.gov/monetarypolicy/publications/beige-book-default.htm": "2025-12-07",
+    "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20251203a.htm": "2025-12-07",
+    "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20251205a.htm": "2025-12-07",
+    "https://www.federalreserve.gov/newsevents/pressreleases/other20251204a.htm": "2025-12-07",
+    "https://www.federalreserve.gov/newsevents/pressreleases/other20251204b.htm": "2025-12-07",
+    "https://www.federalreserve.gov/newsevents/speech/powell20251201a.htm": "2025-12-07",
+    "https://www.federalreserve.gov/newsevents/testimony/bowman20251202a.htm": "2025-12-07",
+    "https://www.federalreserve.gov/publications/supervision-and-regulation-report.htm": "2025-12-07",
     "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/articles-adp/global/en/wealthmanagement/insights/chief-investment-office/market-insights/paul-donovan/2025/consuming-savings.html?caasID=CAAS-ActivityStream": "2025-12-07",
     "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/articles-adp/global/en/wealthmanagement/insights/chief-investment-office/market-insights/paul-donovan/2025/labor-pains.html?caasID=CAAS-ActivityStream": "2025-12-07",
     "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/articles-adp/global/en/wealthmanagement/insights/chief-investment-office/market-insights/paul-donovan/2025/weekly/hyperinflation.html?caasID=CAAS-ActivityStream": "2025-12-07",
@@ -9,7 +18,12 @@
     "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/2025/weekly-key-messages.html": "2025-12-07",
     "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2025/latest-03122025.html": "2025-12-07",
     "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2025/latest-04122025.html": "2025-12-07",
-    "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2025/latest-05122025.html": "2025-12-07"
+    "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2025/latest-05122025.html": "2025-12-07",
+    "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/potus-47/articles/quick-takes-on-the-second-trump-administration.html#blog092525": "2025-12-07",
+    "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/potus-47/articles/quick-takes-on-the-second-trump-administration.html#blog100325": "2025-12-07",
+    "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/potus-47/articles/quick-takes-on-the-second-trump-administration.html#blog103025": "2025-12-07",
+    "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/potus-47/articles/quick-takes-on-the-second-trump-administration.html#grr103125": "2025-12-07",
+    "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/potus-47/articles/quick-takes-on-the-second-trump-administration.html#reform091125": "2025-12-07"
   },
   "summarized_urls": {
     "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/articles-adp/global/en/wealthmanagement/insights/chief-investment-office/market-insights/paul-donovan/2025/consuming-savings.html?caasID=CAAS-ActivityStream": "2025-12-07",
