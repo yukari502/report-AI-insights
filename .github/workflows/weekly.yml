@@ -2,8 +2,8 @@ name: Weekly Report
 
 on:
   schedule:
-    # Run at 00:00 on Saturday (UTC)
-    - cron: '0 0 * * 6'
+    # Run at 06:00 on Saturday (UTC)
+    - cron: '0 6 * * 6'
   workflow_dispatch:
 
 permissions:

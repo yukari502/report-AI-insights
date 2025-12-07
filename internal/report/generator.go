@@ -10,10 +10,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kaze/eco_report/internal/config"
-	"github.com/kaze/eco_report/internal/crawler"
-	"github.com/kaze/eco_report/internal/history"
-	"github.com/kaze/eco_report/internal/llm"
+	"github.com/yukari502/report-AI-insights/internal/config"
+	"github.com/yukari502/report-AI-insights/internal/crawler"
+	"github.com/yukari502/report-AI-insights/internal/history"
+	"github.com/yukari502/report-AI-insights/internal/llm"
 )
 
 type Generator struct {
