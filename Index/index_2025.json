@@ -2,6 +2,46 @@
   "year": "2025",
   "articles": [
     {
+      "title": "Consuming savings",
+      "description": "Consuming savings",
+      "path": "data/posts/UBS/2025-12-07-Consuming_savings.md",
+      "date": "2025-12-07",
+      "category": "UBS",
+      "slug": "2025-12-07-Consuming_savings",
+      "url": "Index/posts/UBS/2025-12-07-Consuming_savings.html",
+      "original_url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/articles-adp/global/en/wealthmanagement/insights/chief-investment-office/market-insights/paul-donovan/2025/consuming-savings.html?caasID=CAAS-ActivityStream"
+    },
+    {
+      "title": "Daily: Consider growth beyond tech",
+      "description": "Daily: Consider growth beyond tech",
+      "path": "data/posts/UBS/2025-12-07-Daily__Consider_growth_beyond_tech.md",
+      "date": "2025-12-07",
+      "category": "UBS",
+      "slug": "2025-12-07-Daily__Consider_growth_beyond_tech",
+      "url": "Index/posts/UBS/2025-12-07-Daily__Consider_growth_beyond_tech.html",
+      "original_url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2025/latest-04122025.html"
+    },
+    {
+      "title": "Daily: Fed easing hopes rise ahead of US data",
+      "description": "Daily: Fed easing hopes rise ahead of US data",
+      "path": "data/posts/UBS/2025-12-07-Daily__Fed_easing_hopes_rise_ahead_of_US_data.md",
+      "date": "2025-12-07",
+      "category": "UBS",
+      "slug": "2025-12-07-Daily__Fed_easing_hopes_rise_ahead_of_US_data",
+      "url": "Index/posts/UBS/2025-12-07-Daily__Fed_easing_hopes_rise_ahead_of_US_data.html",
+      "original_url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2025/latest-03122025.html"
+    },
+    {
+      "title": "Daily: Look beyond US-China tensions in China markets",
+      "description": "Daily: Look beyond US-China tensions in China markets",
+      "path": "data/posts/UBS/2025-12-07-Daily__Look_beyond_US-China_tensions_in_China_markets.md",
+      "date": "2025-12-07",
+      "category": "UBS",
+      "slug": "2025-12-07-Daily__Look_beyond_US-China_tensions_in_China_markets",
+      "url": "Index/posts/UBS/2025-12-07-Daily__Look_beyond_US-China_tensions_in_China_markets.html",
+      "original_url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2025/latest-05122025.html"
+    },
+    {
       "title": "Hyperinflation is here (again)",
       "description": "Hyperinflation is here (again)",
       "path": "data/posts/UBS/2025-12-07-Hyperinflation_is_here_(again).md",
@@ -20,6 +60,26 @@
       "slug": "2025-12-07-The_hassle_of_the_side_hustle",
       "url": "Index/posts/UBS/2025-12-07-The_hassle_of_the_side_hustle.html",
       "original_url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/articles-adp/global/en/wealthmanagement/insights/chief-investment-office/market-insights/paul-donovan/2025/weekly/side-hustle.html?caasID=CAAS-ActivityStream"
+    },
+    {
+      "title": "Trading down",
+      "description": "Trading down",
+      "path": "data/posts/UBS/2025-12-07-Trading_down.md",
+      "date": "2025-12-07",
+      "category": "UBS",
+      "slug": "2025-12-07-Trading_down",
+      "url": "Index/posts/UBS/2025-12-07-Trading_down.html",
+      "original_url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/articles-adp/global/en/wealthmanagement/insights/chief-investment-office/market-insights/paul-donovan/2025/weekly/trading-down.html?caasID=CAAS-ActivityStream"
+    },
+    {
+      "title": "UBS CIO House View | Key messages",
+      "description": "UBS CIO House View | Key messages",
+      "path": "data/posts/UBS/2025-12-07-UBS_CIO_House_View_|_Key_messages.md",
+      "date": "2025-12-07",
+      "category": "UBS",
+      "slug": "2025-12-07-UBS_CIO_House_View_|_Key_messages",
+      "url": "Index/posts/UBS/2025-12-07-UBS_CIO_House_View_|_Key_messages.html",
+      "original_url": "https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/2025/weekly-key-messages.html"
     }
   ]
 }

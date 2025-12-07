@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/kaze/eco_report/internal/config"
@@ -20,12 +21,12 @@ func NewClient(cfg *config.Config) *Client {
 	return &Client{
 		cfg: cfg,
 		httpClient: &http.Client{
-			Timeout: 120 * time.Second, // Gemini might take longer
+			Timeout: 300 * time.Second,
 		},
 	}
 }
 
-// Google Gemini API Request/Response structures
+// --- Google Gemini Structs ---
 type geminiRequest struct {
 	Contents []geminiContent `json:"contents"`
 }
@@ -48,24 +49,41 @@ type geminiResponse struct {
 	} `json:"candidates"`
 }
 
+// --- OpenAI / DeepSeek Structs ---
+type openAIRequest struct {
+	Model    string          `json:"model"`
+	Messages []openAIMessage `json:"messages"`
+	Stream   bool            `json:"stream"`
+}
+
+type openAIMessage struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
+type openAIResponse struct {
+	Choices []struct {
+		Message struct {
+			Content string `json:"content"`
+		} `json:"message"`
+	} `json:"choices"`
+}
+
+// --- Methods ---
+
 func (c *Client) Summarize(content string) (string, error) {
-	// Inject language into prompt
 	prompt := fmt.Sprintf(WeeklyPromptTemplate, c.cfg.OutputLanguage, content)
-	return c.callLLM(prompt, c.cfg.LLMAnalyzerApiURL, c.cfg.LLMAnalyzerModel)
+	// Analyzer uses its own config
+	return c.dispatch(prompt, c.cfg.LLMAnalyzerApiURL, c.cfg.LLMAnalyzerModel, c.cfg.LLMAnalyzerApiKey)
 }
 
 func (c *Client) AnalyzeMonthly(summaries string) (string, error) {
 	prompt := fmt.Sprintf(MonthlyPromptTemplate, c.cfg.OutputLanguage, summaries)
-	return c.callLLM(prompt, c.cfg.LLMAnalyzerApiURL, c.cfg.LLMAnalyzerModel)
+	// Analyzer uses its own config
+	return c.dispatch(prompt, c.cfg.LLMAnalyzerApiURL, c.cfg.LLMAnalyzerModel, c.cfg.LLMAnalyzerApiKey)
 }
 
 func (c *Client) ExtractLinks(htmlContent, currentWeek string) (string, error) {
-	// Special method for AI Crawler
-	// We want articles from the LAST MONTH (as per user request "not older than 1 month")?
-	// User said: "6. 不会抓取过时的文章（距今一个月以上）"
-	// But "1. 这一部分可以按照日期分类...仅读取最新的部分"
-	// Let's ask LLM to discover articles from "Recent Month" to be safe, then we filter strictly later.
-
 	prompt := fmt.Sprintf(`Analyze the following HTML content of a banking insights page.
 Target: Find research articles or insights published within the LAST MONTH.
 Current Date: %s.
@@ -77,10 +95,22 @@ If the article date is not explicitly visible but looks 'new' or 'featured', inc
 
 HTML Content:
 %s`, time.Now().Format("2006-01-02"), htmlContent)
-	return c.callLLM(prompt, c.cfg.LLMCrawlerApiURL, c.cfg.LLMCrawlerModel)
+
+	// Crawler uses its own config
+	return c.dispatch(prompt, c.cfg.LLMCrawlerApiURL, c.cfg.LLMCrawlerModel, c.cfg.LLMCrawlerApiKey)
 }
 
-func (c *Client) callLLM(prompt, apiURL, model string) (string, error) {
+// dispatch routes the request to proper provider handler based on URL or logic
+func (c *Client) dispatch(prompt, apiURL, model, apiKey string) (string, error) {
+	// Simple heuristic: if URL contains "googleapis", it's Gemini
+	if strings.Contains(apiURL, "googleapis") {
+		return c.callGemini(prompt, apiURL, model, apiKey)
+	}
+	// Default to OpenAI compatible (DeepSeek, etc.)
+	return c.callOpenAI(prompt, apiURL, model, apiKey)
+}
+
+func (c *Client) callGemini(prompt, apiURL, model, apiKey string) (string, error) {
 	reqBody := geminiRequest{
 		Contents: []geminiContent{
 			{
@@ -96,7 +126,7 @@ func (c *Client) callLLM(prompt, apiURL, model string) (string, error) {
 		return "", err
 	}
 
-	url := fmt.Sprintf("%s/%s:generateContent?key=%s", apiURL, model, c.cfg.LLMApiKey)
+	url := fmt.Sprintf("%s/%s:generateContent?key=%s", apiURL, model, apiKey)
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -105,6 +135,58 @@ func (c *Client) callLLM(prompt, apiURL, model string) (string, error) {
 
 	req.Header.Set("Content-Type", "application/json")
 
+	return c.doRequest(req, func(body []byte) (string, error) {
+		var chatResp geminiResponse
+		if err := json.Unmarshal(body, &chatResp); err != nil {
+			return "", err
+		}
+		if len(chatResp.Candidates) == 0 || len(chatResp.Candidates[0].Content.Parts) == 0 {
+			return "", fmt.Errorf("no response from Gemini")
+		}
+		return chatResp.Candidates[0].Content.Parts[0].Text, nil
+	})
+}
+
+func (c *Client) callOpenAI(prompt, apiURL, model, apiKey string) (string, error) {
+	reqBody := openAIRequest{
+		Model: model,
+		Messages: []openAIMessage{
+			{Role: "user", Content: prompt},
+		},
+		Stream: false,
+	}
+
+	jsonData, err := json.Marshal(reqBody)
+	if err != nil {
+		return "", err
+	}
+
+	// OpenAI/DeepSeek usually expects /chat/completions appended if base url is provided
+	// But let's assume the user provides the base URL e.g., https://api.deepseek.com/chat/completions
+	// Or we can be smart. DeepSeek doc says: https://api.deepseek.com/chat/completions
+	// If the user configures LLM_CRAWLER_API_URL=https://api.deepseek.com/chat/completions
+
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+apiKey)
+
+	return c.doRequest(req, func(body []byte) (string, error) {
+		var chatResp openAIResponse
+		if err := json.Unmarshal(body, &chatResp); err != nil {
+			return "", err
+		}
+		if len(chatResp.Choices) == 0 {
+			return "", fmt.Errorf("no response from OpenAI/DeepSeek: %s", string(body))
+		}
+		return chatResp.Choices[0].Message.Content, nil
+	})
+}
+
+func (c *Client) doRequest(req *http.Request, parser func([]byte) (string, error)) (string, error) {
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return "", err
@@ -116,14 +198,5 @@ func (c *Client) callLLM(prompt, apiURL, model string) (string, error) {
 		return "", fmt.Errorf("API error: %s - %s", resp.Status, string(body))
 	}
 
-	var chatResp geminiResponse
-	if err := json.Unmarshal(body, &chatResp); err != nil {
-		return "", err
-	}
-
-	if len(chatResp.Candidates) == 0 || len(chatResp.Candidates[0].Content.Parts) == 0 {
-		return "", fmt.Errorf("no response from LLM")
-	}
-
-	return chatResp.Candidates[0].Content.Parts[0].Text, nil
+	return parser(body)
 }

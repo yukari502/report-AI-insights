@@ -8,7 +8,8 @@ import (
 )
 
 type Config struct {
-	LLMApiKey         string
+	LLMCrawlerApiKey  string
+	LLMAnalyzerApiKey string
 	LLMCrawlerApiURL  string
 	LLMAnalyzerApiURL string
 	LLMCrawlerModel   string
@@ -22,14 +23,25 @@ func LoadConfig() (*Config, error) {
 	// Load .env file if it exists (for local dev)
 	_ = godotenv.Load()
 
+	defaultKey := os.Getenv("LLM_API_KEY")
+
 	cfg := &Config{
-		LLMApiKey:         os.Getenv("LLM_API_KEY"),
+		LLMCrawlerApiKey:  os.Getenv("LLM_CRAWLER_API_KEY"),
+		LLMAnalyzerApiKey: os.Getenv("LLM_ANALYZER_API_KEY"),
 		LLMCrawlerApiURL:  os.Getenv("LLM_CRAWLER_API_URL"),
 		LLMAnalyzerApiURL: os.Getenv("LLM_ANALYZER_API_URL"),
 		LLMCrawlerModel:   os.Getenv("LLM_CRAWLER_MODEL"),
 		LLMAnalyzerModel:  os.Getenv("LLM_ANALYZER_MODEL"),
 		OutputLanguage:    os.Getenv("OUTPUT_LANGUAGE"),
 		GithubToken:       os.Getenv("GITHUB_TOKEN"),
+	}
+
+	// Fallback for Keys
+	if cfg.LLMCrawlerApiKey == "" {
+		cfg.LLMCrawlerApiKey = defaultKey
+	}
+	if cfg.LLMAnalyzerApiKey == "" {
+		cfg.LLMAnalyzerApiKey = defaultKey
 	}
 
 	// Fallback for URLs

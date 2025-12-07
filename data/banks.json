@@ -5,8 +5,12 @@
     "jpmorgan.com": "JPMorgan",
     "morganstanley.com": "Morgan Stanley",
     "bankofamerica.com": "Bank of America",
+    "bofa.com": "Bank of America",
     "db.com": "Deutsche Bank",
     "barclays.com": "Barclays",
     "hsbc.com": "HSBC",
-    "credit-suisse.com": "Credit Suisse"
+    "credit-suisse.com": "Credit Suisse",
+    "federalreserve.gov": "Federal Reserve",
+    "bloomberg.com": "Bloomberg",
+    "nri.com": "NRI"
 }
