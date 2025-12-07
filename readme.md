@@ -12,8 +12,184 @@
 4. [工作流程](#4-工作流程)
 5. [核心组件详解](#5-核心组件详解)
 6. [前端架构](#6-前端架构)
-7. [自动化部署](#7-自动化部署)
-8. [维护指南](#8-维护指南)
+7. [及自动化部署](#7-自动化部署)
+8. [使用指南](#8-使用指南)
+
+---
+
+## 1. 项目概述
+
+这是一个基于 **Go + LLM + GitHub Actions** 的自动化银行研报生成与发布系统。
+系统自动抓取指定金融机构的研报，利用 LLM 进行总结分析，生成周报和月度汇总，并发布为静态网站。
+
+### 核心特性
+
+- ✅ **自动抓取**：自动访问目标金融网页提取正文 (支持 Headless Chrome)。
+- ✅ **智能总结**：调用 LLM (Gemini) 生成客观的中文摘要。
+- ✅ **智能分类**：根据 URL 自动归类银行机构 (基于 `data/banks.json`)。
+- ✅ **周期报告**：支持周报（单篇总结）和月报（月度聚合分析）。
+- ✅ **静态生成**：内置 Go 静态站点生成器 (SSG)，生成 SEO 友好的 HTML。
+- ✅ **现代 UI**：暗色玻璃拟态 (Glassmorphism) 风格，响应式网格布局。
+
+---
+
+## 2. 技术栈
+
+### 后端 (Go)
+- **Go 1.21+**
+- `chromedp`：Headless 浏览器爬虫
+- `go-readability`：网页正文提取
+- `net/http`：API 调用与网络请求
+- `html/template`：HTML 生成
+
+### AI / LLM
+- **Prompts**：精心设计的中文 Prompt，强调客观性和数据分析。
+- **Dual Models**：
+  - `LLM_CRAWLER_MODEL`: 低成本模型用于内容发现。
+  - `LLM_ANALYZER_MODEL`: 高性能模型用于深度总结。
+
+### 前端
+- **HTML5 / CSS3 (Modern Dark Theme)**
+- **Marked.js**：Markdown 前端渲染。
+- **Highlight.js**：代码高亮。
+
+---
+
+## 3. 目录结构
+
+```plaintext
+.
+├── .github/workflows/         # [CI/CD] GitHub Actions 配置
+│   ├── weekly.yml             # 每周运行配置
+│   └── monthly.yml            # 每月运行配置
+│
+├── internal/
+│   ├── config/                # [配置] 环境变量加载
+│   ├── crawler/               # [爬虫] 网页内容抓取
+│   ├── llm/                   # [AI] LLM 客户端与 Prompt
+│   ├── report/                # [业务] 报告生成流程控制
+│   └── site/                  # [SSG] 静态网站生成器
+│
+├── data/
+│   ├── cache/                 # [缓存] 原始抓取内容 (JSON)
+│   ├── posts/                 # [数据] 生成的 Markdown 报告文件
+│   └── banks.json             # [配置] 域名到银行名称的映射
+│   
+├── main.go                    # [入口] 程序主入口
+├── index.html                 # [前端] 网站主页
+├── article-template.html      # [前端] 文章页模板
+├── style.css                  # [前端] 样式表
+├── script.js                  # [前端] 前端逻辑
+├── posts/                     # [生成物] 静态 HTML 文章页
+└── Index/                     # [生成物] JSON 索引数据
+```
+
+---
+
+## 4. 工作流程
+
+系统采用 **分步执行 (Decoupled execution)** 模式，提高稳定性和可维护性。
+
+### 4.1 周报生成流程 (`--mode weekly`)
+
+1. **Step 1: Crawl (`--step crawl`)**
+   - 遍历 `TARGET_URLS`。
+   - 使用 LLM 发现新文章。
+   - 抓取正文并保存到 `data/cache/YYYY-MM-DD/`。
+   - *此步骤即便中断，缓存依然保留。*
+
+2. **Step 2: Summarize (`--step summarize`)**
+   - 读取今日缓存。
+   - 过滤已生成的文章。
+   - 使用 LLM 生成 Markdown 摘要并分类保存到 `data/posts/{Bank}/`。
+
+3. **Step 3: Site Gen (`--step site`)**
+   - 扫描 `data/posts/`。
+   - 生成 `posts/` 下的 HTML 页面。
+   - 更新 `articles.json` 和 `index.html` 引用的索引。
+
+### 4.2 月报生成流程 (`--mode monthly`)
+
+- 聚合当月周报，生成趋势分析报告，并重新构建站点。
+
+---
+
+## 5. 核心组件详解
+
+### 5.1 爬虫模块 (`internal/crawler`)
+- 使用 `chromedp` 处理 JavaScript 渲染页面。
+- 使用 `readability` 提取核心内容。
+
+### 5.2 LLM 客户端 (`internal/llm`)
+- 支持双模型架构 (`Crawler` vs `Analyzer`) 以平衡成本与质量。
+
+### 5.3 报告生成器 (`internal/report`)
+- 负责调度 Crawl 和 Summarize 步骤。
+- 自动处理银行分类 (`determineBankCategory`)。
+
+### 5.4 静态站点生成器 (`internal/site`)
+- 扫描 Markdown，提取 Frontmatter。
+- 生成静态 HTML，支持包含原文链接的标题。
+
+---
+
+## 6. 前端架构
+
+- **Root Directory Deployment**: 网站直接部署在根目录。
+- **Hybrid Rendering**:
+  - `index.html`: 动态加载 JSON 索引，渲染 Grid Cards。
+  - `posts/*.html`: 静态生成的内容页，SEO 友好。
+
+---
+
+## 7. 自动化部署
+
+### Environment Variables (.env)
+
+| 变量名 | 描述 |
+|--------|------|
+| `LLM_API_KEY` | LLM 提供商的 API Key |
+| `LLM_API_URL` | LLM API 地址 (如 `https://generativelanguage.googleapis.com/v1beta/models`) |
+| `LLM_CRAWLER_MODEL` | 爬虫模型 (如 `gemini-2.0-flash`) |
+| `LLM_ANALYZER_MODEL` | 分析模型 (如 `gemini-3-pro-preview`) |
+| `OUTPUT_LANGUAGE` | 输出语言 (如 `Chinese`) |
+| `TARGET_URLS` | 目标 URL 列表 (逗号分隔) |
+
+---
+
+## 8. 使用指南 (Usage)
+
+### 完整运行 (Default)
+执行所有步骤 (Crawl -> Summarize -> Site)：
+```bash
+go run main.go --mode weekly
+```
+
+### 分步运行 (推荐)
+为了更稳健的运行，建议分步执行：
+
+1. **抓取数据 (Crawl & Cache)**
+   ```bash
+   go run main.go --mode weekly --step crawl
+   ```
+
+2. **生成摘要 (Summarize)**
+   ```bash
+   go run main.go --mode weekly --step summarize
+   ```
+
+3. **生成网站 (Generate Site)**
+   ```bash
+   go run main.go --mode weekly --step site
+   ```
+
+### 月度分析
+```bash
+go run main.go --mode monthly
+```
+
+### 访问网站
+打开根目录下的 `index.html` 即可浏览。
 
 ---
 
@@ -205,6 +381,32 @@
 
 ---
 
+### 3. Usage
+
+**Full Workflow (Default):**
+```bash
+go run cmd/app/main.go --mode weekly
+```
+
+**Step-by-Step Execution:**
+1. **Crawl & Cache Only** (Fast, gathers data):
+   ```bash
+   go run cmd/app/main.go --mode weekly --step crawl
+   ```
+2. **Summarize Only** (Process cached data):
+   ```bash
+   go run cmd/app/main.go --mode weekly --step summarize
+   ```
+3. **Generate Site Only** (Rebuild HTML):
+   ```bash
+   go run cmd/app/main.go --mode weekly --step site
+   ```
+
+**Monthly Analysis:**
+```bash
+go run cmd/app/main.go --mode monthly
+```
+
 ## 8. 维护指南
 
 ### 本地运行
@@ -215,9 +417,6 @@ go mod tidy
 
 # 运行周报生成 (会生成数据但因无 Key 可能失败，建议配置 .env)
 go run cmd/app/main.go --mode weekly
-
-# 仅重新生成网站 (需先有 data/posts 数据)
-# 暂时未开放单独指令，可修改 main.go 或直接运行 weekly 模式(会跳过已存在的抓取吗? 否，会覆盖)
 ```
 
 ### 1. Environment Variables

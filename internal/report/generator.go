@@ -46,24 +46,25 @@ type CacheItem struct {
 	FetchedDate string `json:"fetched_date"`
 }
 
+// GenerateWeekly orchestrates the full weekly report workflow
 func (g *Generator) GenerateWeekly() error {
+	if err := g.FetchAll(); err != nil {
+		return err
+	}
+	// Wait a bit or straight to summarize
+	log.Println("Crawling complete. Starting summarization...")
+	return g.SummarizeAll()
+}
+
+// FetchAll crawls target URLs and caches content
+func (g *Generator) FetchAll() error {
 	var wg sync.WaitGroup
 	timestamp := time.Now().Format("2006-01-02")
 
-	// Cache Directory: data/cache/YYYY-MM-DD
 	cacheDir := filepath.Join("data", "cache", timestamp)
 	if err := os.MkdirAll(cacheDir, 0755); err != nil {
 		return err
 	}
-
-	// Posts Base Directory
-	postsBaseDir := filepath.Join("data", "posts")
-	if err := os.MkdirAll(postsBaseDir, 0755); err != nil {
-		return err
-	}
-
-	// 1. Build dedup map from existing posts
-	processedURLs := g.loadProcessedURLs(postsBaseDir)
 
 	for _, indexURL := range g.cfg.TargetURLs {
 		if indexURL == "" {
@@ -75,14 +76,12 @@ func (g *Generator) GenerateWeekly() error {
 
 			log.Printf("AI Crawling Index: %s", targetIndexURL)
 
-			// Step 1: Fetch Index Page
 			rawHTML, err := crawler.FetchRawHTML(targetIndexURL)
 			if err != nil {
 				log.Printf("Failed to fetch index %s: %v", targetIndexURL, err)
 				return
 			}
 
-			// Step 2: Use LLM to discover article links
 			log.Printf("Analyzing index with AI...")
 			linksJSON, err := g.llmClient.ExtractLinks(rawHTML, timestamp)
 			if err != nil {
@@ -97,76 +96,105 @@ func (g *Generator) GenerateWeekly() error {
 				return
 			}
 
-			log.Printf("Found %d articles from %s", len(articleLinks), targetIndexURL)
+			log.Printf("Found %d potential articles from %s", len(articleLinks), targetIndexURL)
 
 			for _, link := range articleLinks {
 				if !strings.HasPrefix(link, "http") {
 					continue
 				}
 
-				if processedURLs[link] {
-					log.Printf("Skipping duplicate (already posted): %s", link)
-					continue
-				}
-
-				// Generate Cache Filename (Base64 of URL to be safe)
-				// Actually, simple hash or sanitized string is fine
 				safeName := sanitizeFilename(link)
 				cacheFile := filepath.Join(cacheDir, safeName+".json")
 
-				var cacheItem CacheItem
-
-				// Check if already in today's cache
-				if data, err := os.ReadFile(cacheFile); err == nil {
-					log.Printf("Hit Cache: %s", link)
-					json.Unmarshal(data, &cacheItem)
-				} else {
-					// Cache Miss: Fetch
-					log.Printf("Fetching & Caching: %s", link)
-					article, err := crawler.FetchContent(link)
-					if err != nil {
-						log.Printf("Error crawling %s: %v", link, err)
-						continue
-					}
-
-					cacheItem = CacheItem{
-						URL:         link,
-						Title:       article.Title,
-						Content:     article.Content,
-						Source:      article.Source,
-						FetchedDate: timestamp,
-					}
-
-					// Save to Cache
-					data, _ := json.MarshalIndent(cacheItem, "", "  ")
-					os.WriteFile(cacheFile, data, 0644)
+				// Check Cache
+				if _, err := os.Stat(cacheFile); err == nil {
+					log.Printf("Hit Cache (Skip Fetch): %s", link)
+					continue
 				}
 
-				// Step 4: Summarize (Analyze)
-				log.Printf("Summarizing: %s", cacheItem.Title)
-				summary, err := g.llmClient.Summarize(cacheItem.Content)
+				// Fetch & Cache
+				log.Printf("Fetching: %s", link)
+				article, err := crawler.FetchContent(link)
 				if err != nil {
-					log.Printf("Error summarizing %s: %v", link, err)
+					log.Printf("Error crawling %s: %v", link, err)
 					continue
 				}
 
-				// Determine Bank Category (Directory)
-				// Load mapping (lazy load or load once, here lazy load for simplicity else pass to struct)
-				// For efficiency, let's just do it here or better, load it in NewGenerator?
-				// To keep change localized, I'll load it here once or reused.
-				// Since this runs in a goroutine, parallel read is fine if map is read-only.
-				// Let's implement a helper `determineBankCategory` that reads the file once effectively.
-
-				bankCategory := g.determineBankCategory(link, cacheItem.Source)
-
-				bankDir := filepath.Join(postsBaseDir, bankCategory)
-				if err := os.MkdirAll(bankDir, 0755); err != nil {
-					log.Printf("Failed to create bank dir %s: %v", bankDir, err)
-					continue
+				cacheItem := CacheItem{
+					URL:         link,
+					Title:       article.Title,
+					Content:     article.Content,
+					Source:      article.Source,
+					FetchedDate: timestamp,
 				}
 
-				// Save Report
-				content := fmt.Sprintf(`---
+				data, _ := json.MarshalIndent(cacheItem, "", "  ")
+				os.WriteFile(cacheFile, data, 0644)
+			}
+		}(indexURL)
+	}
+
+	wg.Wait()
+	return nil
+}
+
+// SummarizeAll processes cached articles and generates reports
+func (g *Generator) SummarizeAll() error {
+	timestamp := time.Now().Format("2006-01-02")
+	cacheDir := filepath.Join("data", "cache", timestamp)
+	postsBaseDir := filepath.Join("data", "posts")
+
+	if err := os.MkdirAll(postsBaseDir, 0755); err != nil {
+		return err
+	}
+
+	processedURLs := g.loadProcessedURLs(postsBaseDir)
+
+	entries, err := os.ReadDir(cacheDir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			log.Println("No cache found for today. Run Fetch first.")
+			return nil
+		}
+		return err
+	}
+
+	log.Printf("Found %d cached items to process...", len(entries))
+
+	for _, entry := range entries {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".json") {
+			continue
+		}
+
+		cachePath := filepath.Join(cacheDir, entry.Name())
+		data, err := os.ReadFile(cachePath)
+		if err != nil {
+			continue
+		}
+
+		var cacheItem CacheItem
+		if err := json.Unmarshal(data, &cacheItem); err != nil {
+			log.Printf("Invalid cache file %s: %v", entry.Name(), err)
+			continue
+		}
+
+		if processedURLs[cacheItem.URL] {
+			log.Printf("Skipping already generated: %s", cacheItem.Title)
+			continue
+		}
+
+		log.Printf("Summarizing: %s", cacheItem.Title)
+		summary, err := g.llmClient.Summarize(cacheItem.Content)
+		if err != nil {
+			log.Printf("Error summarizing %s: %v", cacheItem.Title, err)
+			continue
+		}
+
+		bankCategory := g.determineBankCategory(cacheItem.URL, cacheItem.Source)
+		bankDir := filepath.Join(postsBaseDir, bankCategory)
+		os.MkdirAll(bankDir, 0755)
+
+		content := fmt.Sprintf(`---
 title: "%s"
 date: %s
 source: "%s"
@@ -177,24 +205,20 @@ category: "%s"
 # [%s](%s)
 
 %s
-`, cacheItem.Title, timestamp, cacheItem.Source, link, bankCategory, cacheItem.Title, link, summary)
+`, cacheItem.Title, timestamp, cacheItem.Source, cacheItem.URL, bankCategory, cacheItem.Title, cacheItem.URL, summary)
 
-				filename := fmt.Sprintf("%s-%s.md", timestamp, sanitizeFilename(cacheItem.Title))
-				if len(filename) > 100 {
-					filename = filename[:100] + ".md"
-				}
+		filename := fmt.Sprintf("%s-%s.md", timestamp, sanitizeFilename(cacheItem.Title))
+		if len(filename) > 100 {
+			filename = filename[:100] + ".md"
+		}
 
-				path := filepath.Join(bankDir, filename)
-				if err := os.WriteFile(path, []byte(content), 0644); err != nil {
-					log.Printf("Error saving file %s: %v", path, err)
-				} else {
-					log.Printf("Saved report: %s", path)
-				}
-			}
-		}(indexURL)
+		path := filepath.Join(bankDir, filename)
+		if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+			log.Printf("Error saving file %s: %v", path, err)
+		} else {
+			log.Printf("Saved report: %s", path)
+		}
 	}
-
-	wg.Wait()
 	return nil
 }
 

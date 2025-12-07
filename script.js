@@ -52,14 +52,16 @@ function renderArticles(articles) {
     const list = document.getElementById('report-list');
     list.innerHTML = articles.map(art => `
         <li class="report-item">
-            <a href="${art.url}">
-                <h2>${art.title}</h2>
-                <div class="article-meta">
-                    <span>${art.date}</span>
-                    <span class="category">${art.category}</span>
-                </div>
-                <p>${art.description || ''}</p>
-            </a>
+            <div class="card">
+                <a href="${art.url}">
+                    <h2>${art.title}</h2>
+                    <div class="article-meta">
+                        <span>${art.date}</span>
+                        <span class="category">${art.category}</span>
+                    </div>
+                    <p>${art.description || ''}</p>
+                </a>
+            </div>
         </li>
     `).join('');
 }

@@ -115,12 +115,13 @@ func scanArticles(sourceDir, webDir string) ([]ArticleIndex, error) {
 		slug := strings.TrimSuffix(d.Name(), ".md")
 
 		// Determine relative path for JSON (useful if we want to debug)
-		relPath, _ := filepath.Rel("data", path)
+		// relPath, _ := filepath.Rel("data", path)
+		// We need the full path for os.ReadFile later
 
 		articles = append(articles, ArticleIndex{
 			Title:       title,
 			Description: title,
-			Path:        relPath, // e.g. posts/Citi/foo.md
+			Path:        path, // Store full path e.g. data/posts/Citi/foo.md
 			Date:        date,
 			Category:    category,
 			Slug:        slug,
@@ -143,6 +144,11 @@ func scanArticles(sourceDir, webDir string) ([]ArticleIndex, error) {
 }
 
 func generateIndices(articles []ArticleIndex, webDir string) error {
+	// Ensure Index directory exists
+	if err := os.MkdirAll(filepath.Join(webDir, "Index"), 0755); err != nil {
+		return err
+	}
+
 	// articles.json
 	data, _ := json.MarshalIndent(articles, "", "  ")
 	if err := os.WriteFile(filepath.Join(webDir, "articles.json"), data, 0644); err != nil {
@@ -214,10 +220,10 @@ func generateHTMLs(articles []ArticleIndex, webDir string) error {
 		out = strings.ReplaceAll(out, "{ORIGINAL_URL}", a.OriginalURL)
 
 		// Calculate Root Path
-		// URL is posts/{category}/{slug}.html -> depth 2 -> ../../
-		out = strings.ReplaceAll(out, "{ROOT_PATH}", "../../")
+		// URL is Index/posts/{category}/{slug}.html -> depth 3 -> ../../../
+		out = strings.ReplaceAll(out, "{ROOT_PATH}", "../../../")
 
-		destDir := filepath.Join(webDir, "posts", a.Category)
+		destDir := filepath.Join(webDir, "Index", "posts", a.Category)
 		if err := os.MkdirAll(destDir, 0755); err != nil {
 			return err
 		}
