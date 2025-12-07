@@ -5,7 +5,7 @@ package llm
 const WeeklyPromptTemplate = `
 请阅读以下金融研究文章，并进行总结分析。
 目标：作为对Research或Review文章的忠实总结概括，不允许有你自己的看法。
-语言：中文 (Markdown格式)
+语言：Target Output Language: %s (Markdown format)
 
 要求：
 1. 注重各大银行和金融机构对整个事件的看法。
@@ -18,7 +18,7 @@ const WeeklyPromptTemplate = `
 `
 
 // MonthlyPromptTemplate is the prompt for monthly analysis.
-// It expects the aggregated weekly summaries.
+// It expects: Language, Aggregated Content
 const MonthlyPromptTemplate = `
 请分析以下各大银行的Research文章总结（月度汇总）。
 
@@ -26,7 +26,7 @@ const MonthlyPromptTemplate = `
 1. 分析各金融机构对相同事件的看法（相同或不同点）。
 2. 如果需要，用表格分类列举不同机构的看法。
 3. 聚焦对未来走势的预测和关键经济指标的判断。
-4. 语言：中文 (Markdown格式)
+4. 语言：Target Output Language: %s (Markdown format)
 
 汇总内容：
 %s

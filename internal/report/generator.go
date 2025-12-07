@@ -27,27 +27,33 @@ func NewGenerator(cfg *config.Config) *Generator {
 	}
 }
 
+// CacheItem represents the raw data stored in cache
+type CacheItem struct {
+	URL         string `json:"url"`
+	Title       string `json:"title"`
+	Content     string `json:"content"`
+	Source      string `json:"source"`
+	FetchedDate string `json:"fetched_date"`
+}
+
 func (g *Generator) GenerateWeekly() error {
 	var wg sync.WaitGroup
 	timestamp := time.Now().Format("2006-01-02")
 
-	outDir := filepath.Join("data", "posts")
-	if err := os.MkdirAll(outDir, 0755); err != nil {
+	// Cache Directory: data/cache/YYYY-MM-DD
+	cacheDir := filepath.Join("data", "cache", timestamp)
+	if err := os.MkdirAll(cacheDir, 0755); err != nil {
 		return err
 	}
 
-	// 1. Build cache of processed URLs to avoid duplicates
-	processedURLs := make(map[string]bool)
-	entries, _ := os.ReadDir(outDir)
-	for _, entry := range entries {
-		if strings.HasSuffix(entry.Name(), ".md") {
-			content, _ := os.ReadFile(filepath.Join(outDir, entry.Name()))
-			url := extractURLFromFrontmatter(string(content))
-			if url != "" {
-				processedURLs[url] = true
-			}
-		}
+	// Posts Base Directory
+	postsBaseDir := filepath.Join("data", "posts")
+	if err := os.MkdirAll(postsBaseDir, 0755); err != nil {
+		return err
 	}
+
+	// 1. Build dedup map from existing posts
+	processedURLs := g.loadProcessedURLs(postsBaseDir)
 
 	for _, indexURL := range g.cfg.TargetURLs {
 		if indexURL == "" {
@@ -74,67 +80,99 @@ func (g *Generator) GenerateWeekly() error {
 				return
 			}
 
-			// Clean JSON string (sometimes LLM wraps in ```json ... ```)
 			linksJSON = cleanJSON(linksJSON)
-
 			var articleLinks []string
 			if err := json.Unmarshal([]byte(linksJSON), &articleLinks); err != nil {
-				log.Printf("Failed to parse links JSON for %s: %v\nJSON: %s", targetIndexURL, err, linksJSON)
+				log.Printf("Failed to parse links JSON for %s: %v", targetIndexURL, err)
 				return
 			}
 
-			log.Printf("Found %d potential articles from %s", len(articleLinks), targetIndexURL)
+			log.Printf("Found %d articles from %s", len(articleLinks), targetIndexURL)
 
 			for _, link := range articleLinks {
-				// Normalize link (handle relative paths if needed, though prompt asks for full URLs, we might need to fix them)
 				if !strings.HasPrefix(link, "http") {
-					// Extremely basic relative URL handling, might need improvement based on base URL
-					// For now assume LLM does a good job or we skip
 					continue
 				}
 
 				if processedURLs[link] {
-					log.Printf("Skipping duplicate: %s", link)
+					log.Printf("Skipping duplicate (already posted): %s", link)
 					continue
 				}
 
-				// Step 3: Fetch Article Content
-				log.Printf("Fetching: %s", link)
-				article, err := crawler.FetchContent(link)
-				if err != nil {
-					log.Printf("Error crawling %s: %v", link, err)
-					continue
+				// Generate Cache Filename (Base64 of URL to be safe)
+				// Actually, simple hash or sanitized string is fine
+				safeName := sanitizeFilename(link)
+				cacheFile := filepath.Join(cacheDir, safeName+".json")
+
+				var cacheItem CacheItem
+
+				// Check if already in today's cache
+				if data, err := os.ReadFile(cacheFile); err == nil {
+					log.Printf("Hit Cache: %s", link)
+					json.Unmarshal(data, &cacheItem)
+				} else {
+					// Cache Miss: Fetch
+					log.Printf("Fetching & Caching: %s", link)
+					article, err := crawler.FetchContent(link)
+					if err != nil {
+						log.Printf("Error crawling %s: %v", link, err)
+						continue
+					}
+
+					cacheItem = CacheItem{
+						URL:         link,
+						Title:       article.Title,
+						Content:     article.Content,
+						Source:      article.Source,
+						FetchedDate: timestamp,
+					}
+
+					// Save to Cache
+					data, _ := json.MarshalIndent(cacheItem, "", "  ")
+					os.WriteFile(cacheFile, data, 0644)
 				}
 
-				// Step 4: Summarize
-				log.Printf("Summarizing: %s", article.Title)
-				summary, err := g.llmClient.Summarize(article.Content)
+				// Step 4: Summarize (Analyze)
+				log.Printf("Summarizing: %s", cacheItem.Title)
+				summary, err := g.llmClient.Summarize(cacheItem.Content)
 				if err != nil {
 					log.Printf("Error summarizing %s: %v", link, err)
 					continue
 				}
 
-				// Save to file
+				// Determine Bank Category (Directory)
+				// Default to Source from crawler, normalized
+				bankCategory := sanitizeFilename(cacheItem.Source)
+				if bankCategory == "" {
+					bankCategory = "Unknown"
+				}
+
+				bankDir := filepath.Join(postsBaseDir, bankCategory)
+				if err := os.MkdirAll(bankDir, 0755); err != nil {
+					log.Printf("Failed to create bank dir %s: %v", bankDir, err)
+					continue
+				}
+
+				// Save Report
 				content := fmt.Sprintf(`---
 title: "%s"
 date: %s
 source: "%s"
 url: "%s"
+category: "%s"
 ---
 
 # %s
 
 %s
-`, article.Title, timestamp, article.Source, link, article.Title, summary)
+`, cacheItem.Title, timestamp, cacheItem.Source, link, bankCategory, cacheItem.Title, summary)
 
-				safeTitle := strings.ReplaceAll(article.Title, "/", "-")
-				safeTitle = strings.ReplaceAll(safeTitle, " ", "_")
-				filename := fmt.Sprintf("%s-%s.md", timestamp, safeTitle)
+				filename := fmt.Sprintf("%s-%s.md", timestamp, sanitizeFilename(cacheItem.Title))
 				if len(filename) > 100 {
 					filename = filename[:100] + ".md"
 				}
 
-				path := filepath.Join(outDir, filename)
+				path := filepath.Join(bankDir, filename)
 				if err := os.WriteFile(path, []byte(content), 0644); err != nil {
 					log.Printf("Error saving file %s: %v", path, err)
 				} else {
@@ -146,6 +184,36 @@ url: "%s"
 
 	wg.Wait()
 	return nil
+}
+
+func (g *Generator) loadProcessedURLs(rootDir string) map[string]bool {
+	processed := make(map[string]bool)
+	filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
+		if err == nil && !info.IsDir() && strings.HasSuffix(info.Name(), ".md") {
+			content, _ := os.ReadFile(path)
+			url := extractURLFromFrontmatter(string(content))
+			if url != "" {
+				processed[url] = true
+			}
+		}
+		return nil
+	})
+	return processed
+}
+
+func sanitizeFilename(s string) string {
+	s = strings.ReplaceAll(s, "https://", "")
+	s = strings.ReplaceAll(s, "http://", "")
+	s = strings.ReplaceAll(s, "/", "_")
+	s = strings.ReplaceAll(s, ":", "_")
+	s = strings.ReplaceAll(s, "?", "_")
+	s = strings.ReplaceAll(s, "&", "_")
+	s = strings.ReplaceAll(s, "=", "_")
+	s = strings.ReplaceAll(s, " ", "_")
+	if len(s) > 200 {
+		return s[:200]
+	}
+	return s
 }
 
 func extractURLFromFrontmatter(content string) string {

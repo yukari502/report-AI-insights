@@ -8,11 +8,13 @@ import (
 )
 
 type Config struct {
-	LLMApiKey   string
-	LLMApiURL   string
-	LLMModel    string
-	TargetURLs  []string
-	GithubToken string
+	LLMApiKey        string
+	LLMApiURL        string
+	LLMCrawlerModel  string
+	LLMAnalyzerModel string
+	OutputLanguage   string
+	TargetURLs       []string
+	GithubToken      string
 }
 
 func LoadConfig() (*Config, error) {
@@ -20,10 +22,16 @@ func LoadConfig() (*Config, error) {
 	_ = godotenv.Load()
 
 	cfg := &Config{
-		LLMApiKey:   os.Getenv("LLM_API_KEY"),
-		LLMApiURL:   os.Getenv("LLM_API_URL"),
-		LLMModel:    os.Getenv("LLM_MODEL"),
-		GithubToken: os.Getenv("GITHUB_TOKEN"),
+		LLMApiKey:        os.Getenv("LLM_API_KEY"),
+		LLMApiURL:        os.Getenv("LLM_API_URL"),
+		LLMCrawlerModel:  os.Getenv("LLM_CRAWLER_MODEL"),
+		LLMAnalyzerModel: os.Getenv("LLM_ANALYZER_MODEL"),
+		OutputLanguage:   os.Getenv("OUTPUT_LANGUAGE"),
+		GithubToken:      os.Getenv("GITHUB_TOKEN"),
+	}
+
+	if cfg.OutputLanguage == "" {
+		cfg.OutputLanguage = "Chinese" // Default
 	}
 
 	// Parse CSV for request URLs

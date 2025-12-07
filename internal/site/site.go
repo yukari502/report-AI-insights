@@ -63,58 +63,71 @@ func GenerateSite(postsDir, webDir string) error {
 }
 
 func scanArticles(sourceDir, webDir string) ([]ArticleIndex, error) {
-	entries, err := os.ReadDir(sourceDir)
-	if err != nil {
-		return nil, err
-	}
-
 	var articles []ArticleIndex
 
-	for _, entry := range entries {
-		if !strings.HasSuffix(entry.Name(), ".md") {
-			continue
-		}
-
-		info, err := entry.Info()
+	err := filepath.WalkDir(sourceDir, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
-			continue
+			return err
+		}
+		if d.IsDir() {
+			return nil
+		}
+		if !strings.HasSuffix(d.Name(), ".md") {
+			return nil
 		}
 
-		content, err := os.ReadFile(filepath.Join(sourceDir, entry.Name()))
+		content, err := os.ReadFile(path)
 		if err != nil {
-			log.Printf("Failed to read %s: %v", entry.Name(), err)
-			continue
+			log.Printf("Failed to read %s: %v", path, err)
+			return nil
 		}
 
+		info, _ := d.Info()
 		fm := parseFrontMatter(string(content))
 		title := fm["title"]
 		if title == "" {
-			title = strings.TrimSuffix(entry.Name(), ".md")
+			title = strings.TrimSuffix(d.Name(), ".md")
 		}
 		date := fm["date"]
 		if date == "" {
 			date = info.ModTime().Format("2006-01-02")
 		}
 
-		slug := strings.TrimSuffix(entry.Name(), ".md")
-
-		// Determine category/type
-		category := "Uncategorized"
-		if strings.Contains(slug, "Monthly_Analysis") {
-			category = "Monthly"
-		} else {
-			category = "Weekly"
+		category := fm["category"]
+		if category == "" {
+			// Fallback: use parent directory name if not "posts"
+			parent := filepath.Base(filepath.Dir(path))
+			if parent != "posts" && parent != "." {
+				category = parent
+			} else {
+				category = "Uncategorized"
+			}
 		}
+
+		// Special handling for Monthly Analysis
+		if strings.Contains(title, "Monthly Analysis") {
+			category = "Monthly"
+		}
+
+		slug := strings.TrimSuffix(d.Name(), ".md")
+
+		// Determine relative path for JSON (useful if we want to debug)
+		relPath, _ := filepath.Rel("data", path)
 
 		articles = append(articles, ArticleIndex{
 			Title:       title,
-			Description: title,                                        // Use title as desc for now
-			Path:        filepath.Join("data", "posts", entry.Name()), // Keep ref to source
+			Description: title,
+			Path:        relPath, // e.g. posts/Citi/foo.md
 			Date:        date,
 			Category:    category,
 			Slug:        slug,
 			URL:         fmt.Sprintf("posts/%s/%s.html", category, slug),
 		})
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
 	}
 
 	// Sort by date desc

@@ -49,31 +49,38 @@ type geminiResponse struct {
 }
 
 func (c *Client) Summarize(content string) (string, error) {
-	prompt := fmt.Sprintf(WeeklyPromptTemplate, content)
-	return c.callLLM(prompt)
+	// Inject language into prompt
+	prompt := fmt.Sprintf(WeeklyPromptTemplate, c.cfg.OutputLanguage, content)
+	return c.callLLM(prompt, c.cfg.LLMAnalyzerModel)
 }
 
 func (c *Client) AnalyzeMonthly(summaries string) (string, error) {
-	prompt := fmt.Sprintf(MonthlyPromptTemplate, summaries)
-	return c.callLLM(prompt)
+	prompt := fmt.Sprintf(MonthlyPromptTemplate, c.cfg.OutputLanguage, summaries)
+	return c.callLLM(prompt, c.cfg.LLMAnalyzerModel)
 }
 
 func (c *Client) ExtractLinks(htmlContent, currentWeek string) (string, error) {
 	// Special method for AI Crawler
+	// We want articles from the LAST MONTH (as per user request "not older than 1 month")?
+	// User said: "6. 不会抓取过时的文章（距今一个月以上）"
+	// But "1. 这一部分可以按照日期分类...仅读取最新的部分"
+	// Let's ask LLM to discover articles from "Recent Month" to be safe, then we filter strictly later.
+
 	prompt := fmt.Sprintf(`Analyze the following HTML content of a banking insights page.
-Target Date Range: Current week (approx %s).
-Task: Extract links to research articles or insights published within the target date range.
+Target: Find research articles or insights published within the LAST MONTH.
+Current Date: %s.
+Task: Extract links to these articles.
 Ignore navigation links, footers, privacy policies, etc.
 Ignore robots.txt.
 Output Format: JSON array of strings, e.g. ["https://url1", "https://url2"].
 If the article date is not explicitly visible but looks 'new' or 'featured', include it.
 
 HTML Content:
-%s`, currentWeek, htmlContent)
-	return c.callLLM(prompt)
+%s`, time.Now().Format("2006-01-02"), htmlContent)
+	return c.callLLM(prompt, c.cfg.LLMCrawlerModel)
 }
 
-func (c *Client) callLLM(prompt string) (string, error) {
+func (c *Client) callLLM(prompt, model string) (string, error) {
 	reqBody := geminiRequest{
 		Contents: []geminiContent{
 			{
@@ -89,9 +96,7 @@ func (c *Client) callLLM(prompt string) (string, error) {
 		return "", err
 	}
 
-	// URL format: https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=API_KEY
-	// We assume LLM_API_URL is the base, e.g., https://generativelanguage.googleapis.com/v1beta/models
-	url := fmt.Sprintf("%s/%s:generateContent?key=%s", c.cfg.LLMApiURL, c.cfg.LLMModel, c.cfg.LLMApiKey)
+	url := fmt.Sprintf("%s/%s:generateContent?key=%s", c.cfg.LLMApiURL, model, c.cfg.LLMApiKey)
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	if err != nil {

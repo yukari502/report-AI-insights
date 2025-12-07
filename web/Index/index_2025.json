@@ -1,0 +1,50 @@
+{
+  "year": "2025",
+  "articles": [
+    {
+      "title": "Consuming savings",
+      "description": "Consuming savings",
+      "path": "data/posts/2025-12-07-Consuming_savings.md",
+      "date": "2025-12-07",
+      "category": "Weekly",
+      "slug": "2025-12-07-Consuming_savings",
+      "url": "posts/Weekly/2025-12-07-Consuming_savings.html"
+    },
+    {
+      "title": "Daily: Fed easing hopes rise ahead of US data",
+      "description": "Daily: Fed easing hopes rise ahead of US data",
+      "path": "data/posts/2025-12-07-Daily:_Fed_easing_hopes_rise_ahead_of_US_data.md",
+      "date": "2025-12-07",
+      "category": "Weekly",
+      "slug": "2025-12-07-Daily:_Fed_easing_hopes_rise_ahead_of_US_data",
+      "url": "posts/Weekly/2025-12-07-Daily:_Fed_easing_hopes_rise_ahead_of_US_data.html"
+    },
+    {
+      "title": "Labor pains?",
+      "description": "Labor pains?",
+      "path": "data/posts/2025-12-07-Labor_pains?.md",
+      "date": "2025-12-07",
+      "category": "Weekly",
+      "slug": "2025-12-07-Labor_pains?",
+      "url": "posts/Weekly/2025-12-07-Labor_pains?.html"
+    },
+    {
+      "title": "Trading down",
+      "description": "Trading down",
+      "path": "data/posts/2025-12-07-Trading_down.md",
+      "date": "2025-12-07",
+      "category": "Weekly",
+      "slug": "2025-12-07-Trading_down",
+      "url": "posts/Weekly/2025-12-07-Trading_down.html"
+    },
+    {
+      "title": "UBS CIO House View | Key messages",
+      "description": "UBS CIO House View | Key messages",
+      "path": "data/posts/2025-12-07-UBS_CIO_House_View_|_Key_messages.md",
+      "date": "2025-12-07",
+      "category": "Weekly",
+      "slug": "2025-12-07-UBS_CIO_House_View_|_Key_messages",
+      "url": "posts/Weekly/2025-12-07-UBS_CIO_House_View_|_Key_messages.html"
+    }
+  ]
+}
