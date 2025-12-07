@@ -1,0 +1,7 @@
+{
+  "url": "https://www.nri.com/en/knowledge/report/20250804_1.html",
+  "title": "Hypothetical Market Data Scenario Generation Using Generative AI",
+  "content": "AI, especially generative AI has revolutionized a wide range of industries in recent years.\nIn this white paper, we explore the use of generative AI for risk management in the context of central counterparties (CCPs). We examine generative models that can handle and generate numerical data used in the world of finance.\nWe explore how to use generative AI models to create market data with a focus on 3-month TONA Futures contracts. We compare variational autoencoder (VAE) with principal component analysis (PCA) and analyze the generated scenarios. Subsequently, we use the generated data to estimate the risk profiles of various portfolios by calculating Expected Shortfall and Value at Risk (ES-VaR).\nThe results show that the VAE-generated scenarios were more diverse and affected the ES-VaR more than the PCA-generated scenarios.\n\n\n\n\n\n\nAuthor Information\n\n\n\n\nAuthor\nMinoru Aoki\n\n\nDepartment\nCapitai Markets Solution BusinessDepartmentExpert\n\n\n\n\n\n\nAuthor\nSyed Hashim SHAH\n\n\nDepartment\nJapan Securities Clearing Corporation Aurora Solutions K.K.\n\n\n\n\n\n\nAuthor\nJoel VIKLUND\n\n\nDepartment\nJapan Securities Clearing Corporation Aurora Solutions K.K.",
+  "source": "Nomura Research Institute (NRI)",
+  "fetched_date": "2025-12-07"
+}

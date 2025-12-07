@@ -13,8 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Theme Handling ---
     function initTheme() {
-        const savedTheme = localStorage.getItem('theme') ||
-            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
 
         themeToggle.addEventListener('click', () => {
@@ -80,7 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span style="margin-left: auto; font-size: 0.8rem; opacity: 0.8;">${article.date}</span>
                 </div>
                 <h3>${article.title}</h3>
-                <p class="card-desc">${article.description || 'Click to read full report...'}</p>
+                <p class="card-desc">${article.description || 'Click to read full analysis...'}</p>
+                <div class="card-footer">Read Analysis</div>
             `;
 
             card.addEventListener('click', () => {

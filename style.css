@@ -1,56 +1,68 @@
-/* Modern Design System - ECO Financial Theme */
+/* Citi Corporate Theme - Clean, Professional, Blue/White */
 :root {
-    /* Light Theme - Trust & Authority */
-    --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    /* Slate-50 */
-    --bg-tertiary: #e2e8f0;
-    /* Slate-200 */
-    --text-primary: #0f172a;
-    /* Slate-900 */
-    --text-secondary: #475569;
-    /* Slate-600 */
-    --accent-color: #b45309;
-    /* Amber-700 (Bronze/Gold-ish) */
-    --accent-hover: #92400e;
-    /* Amber-800 */
-    --border-color: #cbd5e1;
-    /* Slate-300 */
-    --card-bg: rgba(255, 255, 255, 0.95);
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --sidebar-width: 280px;
-    --font-heading: 'Outfit', sans-serif;
-    --font-body: 'Outfit', sans-serif;
+    /* Brand Colors */
+    --citi-blue-dark: #002D72;
+    /* PMS 286 - Primary Brand Color */
+    --citi-blue-light: #00A3E0;
+    /* PMS Process Cyan - Accent */
+    --citi-gray-dark: #333333;
+    /* Text Body */
+    --citi-gray-medium: #63666A;
+    /* Text Secondary */
+    --citi-gray-light: #D9D9D6;
+    /* Borders */
+    --citi-bg-light: #F8F9FA;
+    /* Page Background */
+
+    /* Mapped Variables */
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8F9FA;
+    --bg-tertiary: #E9ECEF;
+
+    --text-primary: #002D72;
+    /* Headers are Blue */
+    --text-body: #333333;
+    /* Body text is Dark Gray */
+    --text-secondary: #595959;
+
+    --accent-color: #00A3E0;
+    --accent-hover: #0082B3;
+
+    --border-color: #E6E6E6;
+
+    --card-bg: #FFFFFF;
+    --card-shadow: 0 2px 8px rgba(0, 45, 114, 0.08);
+    /* Subtle blue-tinted shadow */
+    --card-shadow-hover: 0 8px 16px rgba(0, 45, 114, 0.12);
+
+    --sidebar-width: 260px;
+    --font-heading: 'Inter', sans-serif;
+    /* Clean corporate font */
+    --font-body: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
     /* Markdown Specific */
-    --md-code-bg: #f1f5f9;
-    --md-blockquote-border: #b45309;
+    --md-code-bg: #F5F7FA;
+    --md-blockquote-border: #00A3E0;
 }
 
+/* Dark Mode - Optional, but typically corporate sites stay light. 
+   We will keep a dark mode but make it "Midnight Blue" inspired for continuity with users who want it. */
 [data-theme="dark"] {
-    /* Dark Theme - Premium Financial Data Terminal */
-    --bg-primary: #0f172a;
-    /* Slate-900 (Deep Navy) */
-    --bg-secondary: #1e293b;
-    /* Slate-800 */
-    --bg-tertiary: #334155;
-    /* Slate-700 */
-    --text-primary: #f8fafc;
-    /* Slate-50 */
-    --text-secondary: #94a3b8;
-    /* Slate-400 */
-    --accent-color: #fbbf24;
-    /* Amber-400 (Bloomberg Gold) */
-    --accent-hover: #fcd34d;
-    /* Amber-300 */
-    --border-color: #334155;
-    /* Slate-700 */
-    --card-bg: rgba(30, 41, 59, 0.6);
-    --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-
-    /* Markdown Specific */
-    --md-code-bg: #1e293b;
+    --bg-primary: #001933;
+    /* Very Deep Blue */
+    --bg-secondary: #002D72;
+    /* Citi Blue */
+    --bg-tertiary: #003B8F;
+    --text-primary: #FFFFFF;
+    --text-body: #E0E0E0;
+    --text-secondary: #B0C4DE;
+    --accent-color: #00A3E0;
+    /* Cyan pops on dark */
+    --accent-hover: #33BEFF;
+    --border-color: #004080;
+    --card-bg: #002244;
+    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 * {
@@ -62,34 +74,10 @@
 body {
     font-family: var(--font-body);
     background-color: var(--bg-secondary);
-    color: var(--text-primary);
+    color: var(--text-body);
     line-height: 1.6;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
-}
-
-/* Custom Scrollbar Styling */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-color) var(--bg-primary);
-}
-
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--bg-primary);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-color);
 }
 
 /* Layout */
@@ -103,45 +91,35 @@ body {
     width: var(--sidebar-width);
     background-color: var(--bg-primary);
     border-right: 1px solid var(--border-color);
-    padding: 2rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     position: fixed;
     left: 0;
     height: 100vh;
     z-index: 100;
-    transition: transform 0.3s ease;
 }
 
 .sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--accent-color);
+    /* Citi red/blue line style */
 }
 
 .logo {
     font-family: var(--font-heading);
-    font-size: 1.5rem;
-    font-weight: 800;
+    font-size: 1.4rem;
+    font-weight: 700;
     color: var(--text-primary);
-    letter-spacing: -0.5px;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    letter-spacing: -0.5px;
 }
 
-.logo span {
+.logo svg {
     color: var(--accent-color);
-}
-
-/* Navigation */
-nav ul {
-    list-style: none;
-}
-
-nav li {
-    margin-bottom: 0.5rem;
 }
 
 .nav-link {
@@ -149,76 +127,52 @@ nav li {
     padding: 0.75rem 1rem;
     color: var(--text-secondary);
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 4px;
     font-weight: 500;
-    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
 }
 
 .nav-link:hover,
 .nav-link.active {
     background-color: var(--bg-secondary);
-    color: var(--accent-color);
-    transform: translateX(4px);
-    border-right: 3px solid var(--accent-color);
+    color: var(--text-primary);
+    border-left-color: var(--accent-color);
 }
 
-/* Sidebar Sections */
+/* Sidebar Lists */
 .sidebar-content {
     flex-grow: 1;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .section-header-small {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    margin-bottom: 1rem;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
+    letter-spacing: 1px;
     font-weight: 700;
-}
-
-.section-header-small .icon {
-    transition: transform 0.3s ease;
-}
-
-.section-header-small.collapsed .icon {
-    transform: rotate(-90deg);
-}
-
-.list-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    max-height: 1000px;
-}
-
-.list-container.collapsed {
-    max-height: 0;
-}
-
-/* Categories */
-.category-item {
+    margin-bottom: 0.75rem;
     padding-left: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
 }
 
 .category-header {
+    font-size: 0.9rem;
+    color: var(--text-body);
+    font-weight: 600;
+    padding: 0.5rem;
+    cursor: pointer;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--text-primary);
-    cursor: pointer;
-    padding: 0.4rem 0;
-    font-size: 0.9rem;
-    font-weight: 500;
+    transition: color 0.2s;
 }
 
 .category-header:hover {
@@ -226,13 +180,13 @@ nav li {
 }
 
 .category-sublist {
-    margin-left: 0.8rem;
+    padding-left: 1.5rem;
     border-left: 1px solid var(--border-color);
-    padding-left: 0.8rem;
+    margin-left: 0.75rem;
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
-    margin-top: 0.4rem;
+    margin-top: 0.2rem;
 }
 
 .category-sublist.collapsed {
@@ -244,24 +198,14 @@ nav li {
     color: var(--text-secondary);
     text-decoration: none;
     padding: 0.2rem 0;
-    transition: color 0.2s;
-    display: block;
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .article-link:hover {
     color: var(--accent-color);
-}
-
-/* Footer */
-.sidebar-footer {
-    margin-top: auto;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border-color);
-    font-size: 0.75rem;
-    color: var(--text-secondary);
+    text-decoration: underline;
 }
 
 /* Main Content */
@@ -269,36 +213,35 @@ nav li {
     flex: 1;
     margin-left: var(--sidebar-width);
     padding: 3rem 4rem;
-    max-width: 1400px;
-    width: 100%;
+    background-color: var(--bg-secondary);
 }
 
 .hero {
     margin-bottom: 3rem;
-    padding: 3rem 0;
+    padding-bottom: 2rem;
     border-bottom: 1px solid var(--border-color);
 }
 
 .hero h1 {
-    font-size: 3.5rem;
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 1rem;
+    font-size: 2.8rem;
     color: var(--text-primary);
+    line-height: 1.2;
+    font-weight: 300;
+    /* Citi uses lighter weights for large headers */
 }
 
-.hero h1 span {
-    color: var(--accent-color);
+.hero h1 strong {
+    font-weight: 700;
 }
 
 .subtitle {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: var(--text-secondary);
-    max-width: 700px;
-    font-weight: 300;
+    margin-top: 1rem;
+    max-width: 600px;
 }
 
-/* Search */
+/* Controls */
 .controls-bar {
     display: flex;
     justify-content: space-between;
@@ -308,277 +251,226 @@ nav li {
 
 .controls-bar h2 {
     font-size: 1.5rem;
-    font-weight: 600;
     color: var(--text-primary);
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.controls-bar h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background-color: var(--accent-color);
 }
 
 .search-wrapper {
     position: relative;
-    width: 320px;
 }
 
 .search-input {
-    width: 100%;
-    background-color: var(--bg-primary);
+    width: 300px;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
     border: 1px solid var(--border-color);
-    padding: 0.75rem 1rem 0.75rem 2.8rem;
-    border-radius: 8px;
-    /* Sharper corners for financial look */
-    color: var(--text-primary);
-    outline: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--text-body);
+    background: var(--bg-primary);
     transition: all 0.2s;
-    font-size: 0.95rem;
 }
 
 .search-input:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+    border-color: var(--text-primary);
+    outline: none;
 }
 
 .search-icon {
     position: absolute;
-    left: 12px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-secondary);
-    pointer-events: none;
+    color: var(--accent-color);
+    width: 16px;
+    height: 16px;
 }
 
 /* Grid */
 .articles-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
 }
 
 .card {
-    background-color: var(--bg-primary);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
+    background-color: var(--card-bg);
     padding: 2rem;
+    border: 1px solid var(--border-color);
+    /* Clean border */
+    border-top: 4px solid transparent;
+    /* Prepare for hover */
+    border-radius: 2px;
+    /* Sharper corners */
+    box-shadow: var(--card-shadow);
+    transition: all 0.2s ease-in-out;
     cursor: pointer;
-    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-}
-
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: var(--accent-color);
-    opacity: 0;
-    transition: opacity 0.3s;
+    height: 320px;
 }
 
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--card-shadow);
-    border-color: var(--accent-color);
-}
-
-.card:hover::before {
-    opacity: 1;
-}
-
-.card h3 {
-    font-size: 1.35rem;
-    margin-bottom: 0.75rem;
-    color: var(--text-primary);
-    font-weight: 700;
-    line-height: 1.35;
+    transform: translateY(-3px);
+    box-shadow: var(--card-shadow-hover);
+    border-top-color: var(--accent-color);
 }
 
 .card-meta {
+    font-size: 0.75rem;
+    color: var(--accent-color);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card h3 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    font-weight: 600;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+    /* Fade out effect logic if needed, but text-overflow is simpler */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.card-footer {
+    margin-top: auto;
+    padding-top: 1rem;
     font-size: 0.8rem;
     color: var(--accent-color);
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.card-desc {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    flex-grow: 1;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    line-height: 1.6;
+.card-footer::after {
+    content: '→';
+    transition: transform 0.2s;
 }
 
-/* Article Page Layout (for template) */
-.article-page-container {
-    /* Inherits app-container logic if sidebar is present */
+.card:hover .card-footer::after {
+    transform: translateX(4px);
 }
 
-.article-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
+/* Article Page Styling */
 .article-header {
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
     border-bottom: 1px solid var(--border-color);
+    padding-bottom: 2rem;
+    margin-bottom: 3rem;
 }
 
 .article-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    line-height: 1.2;
-    margin-bottom: 1rem;
+    font-size: 2.2rem;
     color: var(--text-primary);
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
 
 .article-meta-large {
-    display: flex;
-    gap: 1.5rem;
     color: var(--text-secondary);
     font-size: 0.9rem;
-    align-items: center;
+    display: flex;
+    gap: 1rem;
 }
 
-.article-category {
-    color: var(--accent-color);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Markdown Content Styling */
 .markdown-body {
-    color: var(--text-primary);
-    font-size: 1.1rem;
-    line-height: 1.8;
+    color: var(--text-body);
+    font-size: 1.05rem;
 }
 
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3 {
-    margin-top: 2.5rem;
-    margin-bottom: 1rem;
     color: var(--text-primary);
-    font-weight: 700;
+    margin-top: 2.5rem;
 }
 
-.markdown-body p {
-    margin-bottom: 1.5rem;
+.markdown-body blockquote {
+    border-left-color: var(--accent-color);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
 }
 
 .markdown-body a {
     color: var(--accent-color);
     text-decoration: none;
-    border-bottom: 1px dotted var(--accent-color);
+    font-weight: 500;
 }
 
 .markdown-body a:hover {
-    border-bottom-style: solid;
+    text-decoration: underline;
 }
 
-.markdown-body blockquote {
-    border-left: 4px solid var(--accent-color);
-    padding-left: 1.5rem;
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CCCCCC;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
+/* Footer & Toggle */
+.sidebar-footer {
     color: var(--text-secondary);
-    font-style: italic;
-    background: var(--bg-tertiary);
-    /* Slight bg for quote */
-    padding: 1rem;
-    border-radius: 0 8px 8px 0;
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+    margin-top: auto;
 }
 
-.markdown-body code {
-    background-color: var(--md-code-bg);
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    font-family: var(--font-mono);
-    font-size: 0.9em;
-    color: var(--accent-color);
-}
-
-.markdown-body img {
-    max-width: 100%;
-    border-radius: 8px;
-    margin: 2rem 0;
-    border: 1px solid var(--border-color);
-}
-
-/* Theme Toggle */
 #theme-toggle {
-    background: none;
-    border: none;
     color: var(--text-secondary);
-    cursor: pointer;
     padding: 0.5rem;
     border-radius: 50%;
-    transition: all 0.2s;
+    cursor: pointer;
+    background: var(--bg-tertiary);
+    border: none;
 }
 
 #theme-toggle:hover {
     color: var(--accent-color);
-    background-color: var(--bg-secondary);
 }
 
-.sun-icon {
-    display: none;
-}
-
-.moon-icon {
-    display: block;
-}
-
-[data-theme="dark"] .sun-icon {
-    display: block;
-}
-
-[data-theme="dark"] .moon-icon {
-    display: none;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-    .content-area {
-        margin-left: 0;
-        padding: 2rem;
-    }
-
-    .sidebar {
-        transform: translateX(-100%);
-    }
-
-    .sidebar.active {
-        transform: translateX(0);
-    }
-
-    #sidebar-toggle {
-        display: block;
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        z-index: 1000;
-        background-color: var(--accent-color);
-        color: var(--bg-primary);
-        /* Contrast for toggle button */
-        border: none;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+/* Clean UI tweaks */
+.chevron {
+    color: var(--text-secondary);
 }
