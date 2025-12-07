@@ -1,49 +1,51 @@
-name: Monthly Report
-
-on:
-  schedule:
-    # Run at 00:00 on the 1st of every month
-    - cron: '0 0 1 * *'
-  workflow_dispatch:
-
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.21'
-          
-      - name: Build
-        run: go build -o eco_report main.go
-        
-      - name: Generate Report
-        env:
-          LLM_CRAWLER_API_KEY: ${{ secrets.LLM_CRAWLER_API_KEY }}
-          LLM_ANALYZER_API_KEY: ${{ secrets.LLM_ANALYZER_API_KEY }}
-          LLM_CRAWLER_API_URL: ${{ vars.LLM_CRAWLER_API_URL }}
-          LLM_ANALYZER_API_URL: ${{ vars.LLM_ANALYZER_API_URL }}
-          LLM_CRAWLER_MODEL: ${{ vars.LLM_CRAWLER_MODEL }}
-          LLM_ANALYZER_MODEL: ${{ vars.LLM_ANALYZER_MODEL }}
-          TARGET_URLS: ${{ vars.TARGET_URLS }}
-          EMAIL_SENDER_PASSWORD: ${{ secrets.EMAIL_SENDER_PASSWORD }}
-          EMAIL_SENDER_ADDRESS: ${{ secrets.EMAIL_SENDER_ADDRESS }}
-          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
-        run: ./eco_report --mode monthly
-        
-      - name: Commit and Push changes
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add .
-          git commit -m "Auto-generated monthly report" || exit 0
-          git push
+# name: Monthly Report
+# ##
+#
+# ##
+# on:
+#   schedule:
+#     # Run at 00:00 on the 1st of every month
+#     - cron: '0 0 1 * *'
+#   workflow_dispatch:
+#
+# permissions:
+#   contents: write
+#   pages: write
+#   id-token: write
+#
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+#
+#       - name: Set up Go
+#         uses: actions/setup-go@v4
+#         with:
+#           go-version: '1.21'
+#
+#       - name: Build
+#         run: go build -o eco_report main.go
+#
+#       - name: Generate Report
+#         env:
+#           LLM_CRAWLER_API_KEY: ${{ secrets.LLM_CRAWLER_API_KEY }}
+#           LLM_ANALYZER_API_KEY: ${{ secrets.LLM_ANALYZER_API_KEY }}
+#           LLM_CRAWLER_API_URL: ${{ vars.LLM_CRAWLER_API_URL }}
+#           LLM_ANALYZER_API_URL: ${{ vars.LLM_ANALYZER_API_URL }}
+#           LLM_CRAWLER_MODEL: ${{ vars.LLM_CRAWLER_MODEL }}
+#           LLM_ANALYZER_MODEL: ${{ vars.LLM_ANALYZER_MODEL }}
+#           TARGET_URLS: ${{ vars.TARGET_URLS }}
+#           EMAIL_SENDER_PASSWORD: ${{ secrets.EMAIL_SENDER_PASSWORD }}
+#           EMAIL_SENDER_ADDRESS: ${{ secrets.EMAIL_SENDER_ADDRESS }}
+#           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+#         run: ./eco_report --mode monthly
+#
+#       - name: Commit and Push changes
+#         run: |
+#           git config --global user.name 'github-actions[bot]'
+#           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+#           git add .
+#           git commit -m "Auto-generated monthly report" || exit 0
+#           git push
