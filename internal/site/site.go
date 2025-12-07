@@ -125,7 +125,7 @@ func scanArticles(sourceDir, webDir string) ([]ArticleIndex, error) {
 			Date:        date,
 			Category:    category,
 			Slug:        slug,
-			URL:         fmt.Sprintf("posts/%s/%s.html", category, slug),
+			URL:         fmt.Sprintf("Index/posts/%s/%s.html", category, slug),
 			OriginalURL: originalURL,
 		})
 		return nil
@@ -140,6 +140,7 @@ func scanArticles(sourceDir, webDir string) ([]ArticleIndex, error) {
 		return articles[i].Date > articles[j].Date
 	})
 
+	log.Printf("Scanned %d articles from %s", len(articles), sourceDir)
 	return articles, nil
 }
 
