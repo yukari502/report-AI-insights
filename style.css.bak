@@ -523,14 +523,3 @@ body {
 .chevron {
     color: var(--text-secondary);
 }
-/* Main Content Footer */
-.main-footer {
-    margin-top: 4rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border-color);
-    text-align: center;
-    color: var(--text-secondary);
-    font-size: 0.8rem;
-    opacity: 0.7;
-    line-height: 1.6;
-}
