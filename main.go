@@ -41,7 +41,7 @@ func runWeekly(cfg *config.Config) {
 
 	// Generate Site
 	log.Println("Generating Static Site...")
-	if err := site.GenerateSite("data/posts", "web"); err != nil {
+	if err := site.GenerateSite("data/posts", "."); err != nil {
 		log.Fatalf("Site generation failed: %v", err)
 	}
 }
@@ -55,7 +55,7 @@ func runMonthly(cfg *config.Config) {
 
 	// Generate Site
 	log.Println("Generating Static Site...")
-	if err := site.GenerateSite("data/posts", "web"); err != nil {
+	if err := site.GenerateSite("data/posts", "."); err != nil {
 		log.Fatalf("Site generation failed: %v", err)
 	}
 }

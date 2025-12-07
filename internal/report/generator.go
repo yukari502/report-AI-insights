@@ -16,14 +16,24 @@ import (
 )
 
 type Generator struct {
-	cfg       *config.Config
-	llmClient *llm.Client
+	cfg         *config.Config
+	llmClient   *llm.Client
+	bankMapping map[string]string
 }
 
 func NewGenerator(cfg *config.Config) *Generator {
-	return &Generator{
+	g := &Generator{
 		cfg:       cfg,
 		llmClient: llm.NewClient(cfg),
+	}
+	g.loadBankMapping()
+	return g
+}
+
+func (g *Generator) loadBankMapping() {
+	data, err := os.ReadFile(filepath.Join("data", "banks.json"))
+	if err == nil {
+		json.Unmarshal(data, &g.bankMapping)
 	}
 }
 
@@ -141,11 +151,13 @@ func (g *Generator) GenerateWeekly() error {
 				}
 
 				// Determine Bank Category (Directory)
-				// Default to Source from crawler, normalized
-				bankCategory := sanitizeFilename(cacheItem.Source)
-				if bankCategory == "" {
-					bankCategory = "Unknown"
-				}
+				// Load mapping (lazy load or load once, here lazy load for simplicity else pass to struct)
+				// For efficiency, let's just do it here or better, load it in NewGenerator?
+				// To keep change localized, I'll load it here once or reused.
+				// Since this runs in a goroutine, parallel read is fine if map is read-only.
+				// Let's implement a helper `determineBankCategory` that reads the file once effectively.
+
+				bankCategory := g.determineBankCategory(link, cacheItem.Source)
 
 				bankDir := filepath.Join(postsBaseDir, bankCategory)
 				if err := os.MkdirAll(bankDir, 0755); err != nil {
@@ -162,10 +174,10 @@ url: "%s"
 category: "%s"
 ---
 
-# %s
+# [%s](%s)
 
 %s
-`, cacheItem.Title, timestamp, cacheItem.Source, link, bankCategory, cacheItem.Title, summary)
+`, cacheItem.Title, timestamp, cacheItem.Source, link, bankCategory, cacheItem.Title, link, summary)
 
 				filename := fmt.Sprintf("%s-%s.md", timestamp, sanitizeFilename(cacheItem.Title))
 				if len(filename) > 100 {
@@ -224,6 +236,20 @@ func extractURLFromFrontmatter(content string) string {
 		}
 	}
 	return ""
+}
+
+func (g *Generator) determineBankCategory(link, source string) string {
+	for domain, name := range g.bankMapping {
+		if strings.Contains(link, domain) {
+			return sanitizeFilename(name)
+		}
+	}
+	// Fallback
+	res := sanitizeFilename(source)
+	if res == "" {
+		return "Unknown"
+	}
+	return res
 }
 
 func cleanJSON(s string) string {

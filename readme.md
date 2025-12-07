@@ -193,7 +193,9 @@
 | 变量名 | 描述 |
 |--------|------|
 | `LLM_API_URL` | LLM API 地址 (如 `https://api.openai.com/v1`) |
-| `LLM_MODEL` | 模型名称 (如 `gpt-4o`) |
+| `LLM_CRAWLER_MODEL` | 用于爬虫内容发现的 LLM 模型 (如 `gemini-2.0-flash`) |
+| `LLM_ANALYZER_MODEL` | 用于内容总结和分析的 LLM 模型 (如 `gemini-3-pro-preview`) |
+| `OUTPUT_LANGUAGE` | 生成报告的语言 (如 `Chinese`, `English`) |
 | `TARGET_URLS` | 需要抓取的 URL 列表 (逗号分隔) |
 
 ### 定时任务
@@ -217,6 +219,33 @@ go run cmd/app/main.go --mode weekly
 # 仅重新生成网站 (需先有 data/posts 数据)
 # 暂时未开放单独指令，可修改 main.go 或直接运行 weekly 模式(会跳过已存在的抓取吗? 否，会覆盖)
 ```
+
+### 1. Environment Variables
+Create a `.env` file in the root directory:
+```bash
+LLM_API_KEY=your_google_gemini_key
+LLM_API_URL=https://generativelanguage.googleapis.com/v1beta/models
+LLM_CRAWLER_MODEL=gemini-2.0-flash       # Fast/Cheap model for discovery
+LLM_ANALYZER_MODEL=gemini-3-pro-preview   # Smart model for summarization
+OUTPUT_LANGUAGE=Chinese                  # Language for generated reports
+TARGET_URLS=https://site1.com,https://site2.com
+GITHUB_TOKEN=your_github_token           # Auto-injected by Actions
+```
+
+### 2. Workflow
+The system operates on a Weekly (and Monthly) cycle:
+
+1.  **AI Crawler (Headless)**:
+    -   Launches Headless Chrome to render target index pages.
+    -   Uses **Crawler LLM** (`gemini-2.0-flash`) to discover relevant articles from the past month.
+2.  **Deduplication & Caching**:
+    -   Checks if article is already in `data/cache/YYYY-MM-DD`.
+    -   If not, fetches content and saves raw JSON to Cache.
+3.  **Analysis**:
+    -   Uses **Analyzer LLM** (`gemini-3-pro-preview`) to summarize cached content in the target language (Chinese).
+    -   Categorizes reports by Bank/Source.
+4.  **Static Site Generation**:
+    -   Generates a searchable index and static HTML pages in `web/`.
 
 ### 添加新文章 (手动)
 

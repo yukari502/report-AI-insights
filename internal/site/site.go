@@ -20,7 +20,8 @@ type ArticleIndex struct {
 	Date        string `json:"date"`
 	Category    string `json:"category"`
 	Slug        string `json:"slug"`
-	URL         string `json:"url"` // Relative URL to generated html
+	URL         string `json:"url"`          // Relative URL to generated html
+	OriginalURL string `json:"original_url"` // Source URL from frontmatter
 }
 
 type YearIndex struct {
@@ -109,6 +110,8 @@ func scanArticles(sourceDir, webDir string) ([]ArticleIndex, error) {
 			category = "Monthly"
 		}
 
+		originalURL := fm["url"]
+
 		slug := strings.TrimSuffix(d.Name(), ".md")
 
 		// Determine relative path for JSON (useful if we want to debug)
@@ -122,6 +125,7 @@ func scanArticles(sourceDir, webDir string) ([]ArticleIndex, error) {
 			Category:    category,
 			Slug:        slug,
 			URL:         fmt.Sprintf("posts/%s/%s.html", category, slug),
+			OriginalURL: originalURL,
 		})
 		return nil
 	})
@@ -205,6 +209,9 @@ func generateHTMLs(articles []ArticleIndex, webDir string) error {
 		out = strings.ReplaceAll(out, "{CATEGORY}", a.Category)
 		out = strings.ReplaceAll(out, "{SLUG}", a.Slug)
 		out = strings.ReplaceAll(out, "{CONTENT}", escapedBody)
+
+		// If OriginalURL is empty (e.g. monthly analysis), we might fallback or just leave empty href (handled in template)
+		out = strings.ReplaceAll(out, "{ORIGINAL_URL}", a.OriginalURL)
 
 		// Calculate Root Path
 		// URL is posts/{category}/{slug}.html -> depth 2 -> ../../
