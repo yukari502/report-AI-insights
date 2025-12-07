@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kaze/eco_report/internal/config"
+	"github.com/yukari502/report-AI-insights/internal/config"
 )
 
 type Client struct {

@@ -4,9 +4,9 @@ import (
 	"flag"
 	"log"
 
-	"github.com/kaze/eco_report/internal/config"
-	"github.com/kaze/eco_report/internal/report"
-	"github.com/kaze/eco_report/internal/site"
+	"github.com/yukari502/report-AI-insights/internal/config"
+	"github.com/yukari502/report-AI-insights/internal/report"
+	"github.com/yukari502/report-AI-insights/internal/site"
 )
 
 func main() {

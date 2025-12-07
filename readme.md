@@ -124,17 +124,28 @@
 
 ## 5. 配置指南
 
-系统高度可配置，主要通过环境变量 (`.env` 或 GitHub Secrets) 控制。
+### 5.1 环境变量配置 (GitHub Secrets & Variables)
 
-| 变量名 | 必填 | 说明 | 示例值 |
-|--------|-----|------|--------|
-| `LLM_API_KEY` | ✅ | Gemini API Key | `AIzaSy...` |
-| `LLM_CRAWLER_API_URL` | ✅ | 爬虫模型 API 地址 | `https://generativelanguage.googleapis.com/v1beta/models` |
-| `LLM_CRAWLER_MODEL` | ✅ | 爬虫模型名称 | `gemini-2.0-flash` (速度快) |
-| `LLM_ANALYZER_API_URL` | ✅ | 分析模型 API 地址 | `https://generativelanguage.googleapis.com/v1beta/models` |
-| `LLM_ANALYZER_MODEL` | ✅ | 分析模型名称 | `gemini-1.5-pro` (更聪明) |
-| `TARGET_URLS` | ✅ | 监控的网页入口，逗号分隔 | `https://site1.com,https://site2.com` |
-| `OUTPUT_LANGUAGE` | ❌ | 输出语言 | `Chinese` (默认) |
+在 GitHub 仓库的 `Settings` -> `Secrets and variables` -> `Actions` 中配置以下内容：
+
+#### 🔐 Secrets (敏感信息)
+| Secret Name | 说明 | 示例值 |
+|-------------|------|--------|
+| `LLM_CRAWLER_API_KEY` | 爬虫模型 API Key | `AIzaSy...` |
+| `LLM_ANALYZER_API_KEY` | 分析模型 API Key | `AIzaSy...` |
+| `EMAIL_SENDER_ADDRESS` | 发件人邮箱 | `reports@example.com` |
+| `EMAIL_SENDER_PASSWORD` | 邮箱应用密码 (App Password) | `xxxx-xxxx-xxxx-xxxx` |
+| `RECIPIENT_EMAIL` | 接收报告的邮箱 | `user@example.com` |
+
+#### 📝 Variables (配置变量)
+| Variable Name | 说明 | 示例值 |
+|---------------|------|--------|
+| `LLM_CRAWLER_MODEL` | 爬虫模型名称 | `gemini-2.0-flash-exp` |
+| `LLM_ANALYZER_MODEL` | 分析模型名称 | `gemini-1.5-pro` |
+| `LLM_CRAWLER_API_URL` | 爬虫 API 端点 | `https://generativelanguage.googleapis.com/v1beta/models` |
+| `LLM_ANALYZER_API_URL` | 分析 API 端点 | `https://generativelanguage.googleapis.com/v1beta/models` |
+| `TARGET_URLS` | 监控目标 URL (逗号分隔) | `https://site1.com,https://site2.com` |
+
 
 ### 银行匹配配置 (`data/banks.json`)
 
@@ -147,6 +158,16 @@
   "goldmansachs.com": "Goldman Sachs"
 }
 ```
+
+### 5.3 访问已部署的网站
+
+当 GitHub Actions (Weekly Report) 运行成功后，网站将自动部署至 GitHub Pages。
+
+1.  确保在仓库 `Settings` -> `Pages` 中，`Source` 设置为 `GitHub Actions`。
+2.  访问地址格式：
+    > `https://<your-username>.github.io/<repo-name>/`
+    
+    例如: `https://yukari502.github.io/report-AI-insights/`
 
 ---
 
