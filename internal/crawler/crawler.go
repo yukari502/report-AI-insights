@@ -20,8 +20,20 @@ type Article struct {
 
 // FetchRawHTML uses chromedp to fetch and render the page (executing JS)
 func FetchRawHTML(urlStr string) (string, error) {
-	// 1. Create context
-	ctx, cancel := chromedp.NewContext(context.Background())
+	// 1. Create allocator options
+	opts := append(chromedp.DefaultExecAllocatorOptions[:],
+		chromedp.Flag("headless", true),
+		chromedp.Flag("no-sandbox", true),
+		chromedp.Flag("disable-gpu", true),
+		chromedp.Flag("disable-dev-shm-usage", true),
+		chromedp.Flag("disable-setuid-sandbox", true),
+	)
+
+	allocCtx, cancelAlloc := chromedp.NewExecAllocator(context.Background(), opts...)
+	defer cancelAlloc()
+
+	// 2. Create context
+	ctx, cancel := chromedp.NewContext(allocCtx)
 	defer cancel()
 
 	// 2. Timeout context
