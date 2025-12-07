@@ -149,9 +149,10 @@
 | 变量名 | 描述 |
 |--------|------|
 | `LLM_API_KEY` | LLM 提供商的 API Key |
-| `LLM_API_URL` | LLM API 地址 (如 `https://generativelanguage.googleapis.com/v1beta/models`) |
-| `LLM_CRAWLER_MODEL` | 爬虫模型 (如 `gemini-2.0-flash`) |
-| `LLM_ANALYZER_MODEL` | 分析模型 (如 `gemini-3-pro-preview`) |
+| `LLM_CRAWLER_API_URL` | 爬虫 AI 的 API 地址 (如 `https://gemini-flash.api/v1`) |
+| `LLM_CRAWLER_MODEL` | 爬虫模型名称 (如 `gemini-2.0-flash`) |
+| `LLM_ANALYZER_API_URL` | 分析 AI 的 API 地址 (如 `https://gemini-pro.api/v1`) |
+| `LLM_ANALYZER_MODEL` | 分析模型名称 (如 `gemini-3-pro-preview`) |
 | `OUTPUT_LANGUAGE` | 输出语言 (如 `Chinese`) |
 | `TARGET_URLS` | 目标 URL 列表 (逗号分隔) |
 

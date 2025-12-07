@@ -51,12 +51,12 @@ type geminiResponse struct {
 func (c *Client) Summarize(content string) (string, error) {
 	// Inject language into prompt
 	prompt := fmt.Sprintf(WeeklyPromptTemplate, c.cfg.OutputLanguage, content)
-	return c.callLLM(prompt, c.cfg.LLMAnalyzerModel)
+	return c.callLLM(prompt, c.cfg.LLMAnalyzerApiURL, c.cfg.LLMAnalyzerModel)
 }
 
 func (c *Client) AnalyzeMonthly(summaries string) (string, error) {
 	prompt := fmt.Sprintf(MonthlyPromptTemplate, c.cfg.OutputLanguage, summaries)
-	return c.callLLM(prompt, c.cfg.LLMAnalyzerModel)
+	return c.callLLM(prompt, c.cfg.LLMAnalyzerApiURL, c.cfg.LLMAnalyzerModel)
 }
 
 func (c *Client) ExtractLinks(htmlContent, currentWeek string) (string, error) {
@@ -77,10 +77,10 @@ If the article date is not explicitly visible but looks 'new' or 'featured', inc
 
 HTML Content:
 %s`, time.Now().Format("2006-01-02"), htmlContent)
-	return c.callLLM(prompt, c.cfg.LLMCrawlerModel)
+	return c.callLLM(prompt, c.cfg.LLMCrawlerApiURL, c.cfg.LLMCrawlerModel)
 }
 
-func (c *Client) callLLM(prompt, model string) (string, error) {
+func (c *Client) callLLM(prompt, apiURL, model string) (string, error) {
 	reqBody := geminiRequest{
 		Contents: []geminiContent{
 			{
@@ -96,7 +96,7 @@ func (c *Client) callLLM(prompt, model string) (string, error) {
 		return "", err
 	}
 
-	url := fmt.Sprintf("%s/%s:generateContent?key=%s", c.cfg.LLMApiURL, model, c.cfg.LLMApiKey)
+	url := fmt.Sprintf("%s/%s:generateContent?key=%s", apiURL, model, c.cfg.LLMApiKey)
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	if err != nil {

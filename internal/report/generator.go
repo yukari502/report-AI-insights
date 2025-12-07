@@ -12,19 +12,23 @@ import (
 
 	"github.com/kaze/eco_report/internal/config"
 	"github.com/kaze/eco_report/internal/crawler"
+	"github.com/kaze/eco_report/internal/history"
 	"github.com/kaze/eco_report/internal/llm"
 )
 
 type Generator struct {
 	cfg         *config.Config
 	llmClient   *llm.Client
+	history     *history.History
 	bankMapping map[string]string
 }
 
 func NewGenerator(cfg *config.Config) *Generator {
+	hist, _ := history.NewHistory("data/history.json") // Ignoring error for simplicity, will start empty
 	g := &Generator{
 		cfg:       cfg,
 		llmClient: llm.NewClient(cfg),
+		history:   hist,
 	}
 	g.loadBankMapping()
 	return g
@@ -106,9 +110,14 @@ func (g *Generator) FetchAll() error {
 				safeName := sanitizeFilename(link)
 				cacheFile := filepath.Join(cacheDir, safeName+".json")
 
-				// Check Cache
+				// Check History & Cache
+				if g.history.HasCrawled(link) {
+					log.Printf("Already Crawled (History): %s", link)
+					continue
+				}
 				if _, err := os.Stat(cacheFile); err == nil {
-					log.Printf("Hit Cache (Skip Fetch): %s", link)
+					log.Printf("Hit Cache (File): %s", link)
+					g.history.AddCrawled(link) // Sync history if file exists
 					continue
 				}
 
@@ -130,6 +139,7 @@ func (g *Generator) FetchAll() error {
 
 				data, _ := json.MarshalIndent(cacheItem, "", "  ")
 				os.WriteFile(cacheFile, data, 0644)
+				g.history.AddCrawled(link)
 			}
 		}(indexURL)
 	}
@@ -148,7 +158,9 @@ func (g *Generator) SummarizeAll() error {
 		return err
 	}
 
-	processedURLs := g.loadProcessedURLs(postsBaseDir)
+	if err := os.MkdirAll(postsBaseDir, 0755); err != nil {
+		return err
+	}
 
 	entries, err := os.ReadDir(cacheDir)
 	if err != nil {
@@ -178,8 +190,8 @@ func (g *Generator) SummarizeAll() error {
 			continue
 		}
 
-		if processedURLs[cacheItem.URL] {
-			log.Printf("Skipping already generated: %s", cacheItem.Title)
+		if g.history.HasSummarized(cacheItem.URL) {
+			log.Printf("Skipping already summarized: %s", cacheItem.Title)
 			continue
 		}
 
@@ -217,24 +229,10 @@ category: "%s"
 			log.Printf("Error saving file %s: %v", path, err)
 		} else {
 			log.Printf("Saved report: %s", path)
+			g.history.AddSummarized(cacheItem.URL)
 		}
 	}
 	return nil
-}
-
-func (g *Generator) loadProcessedURLs(rootDir string) map[string]bool {
-	processed := make(map[string]bool)
-	filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
-		if err == nil && !info.IsDir() && strings.HasSuffix(info.Name(), ".md") {
-			content, _ := os.ReadFile(path)
-			url := extractURLFromFrontmatter(string(content))
-			if url != "" {
-				processed[url] = true
-			}
-		}
-		return nil
-	})
-	return processed
 }
 
 func sanitizeFilename(s string) string {
@@ -250,16 +248,6 @@ func sanitizeFilename(s string) string {
 		return s[:200]
 	}
 	return s
-}
-
-func extractURLFromFrontmatter(content string) string {
-	lines := strings.Split(content, "\n")
-	for _, line := range lines {
-		if strings.HasPrefix(line, "url:") {
-			return strings.Trim(strings.TrimPrefix(line, "url:"), ` "`)
-		}
-	}
-	return ""
 }
 
 func (g *Generator) determineBankCategory(link, source string) string {

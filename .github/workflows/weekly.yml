@@ -29,8 +29,10 @@ jobs:
       - name: Generate Report
         env:
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-          LLM_API_URL: ${{ vars.LLM_API_URL }}
-          LLM_MODEL: ${{ vars.LLM_MODEL }}
+          LLM_CRAWLER_API_URL: ${{ vars.LLM_CRAWLER_API_URL }}
+          LLM_ANALYZER_API_URL: ${{ vars.LLM_ANALYZER_API_URL }}
+          LLM_CRAWLER_MODEL: ${{ vars.LLM_CRAWLER_MODEL }}
+          LLM_ANALYZER_MODEL: ${{ vars.LLM_ANALYZER_MODEL }}
           TARGET_URLS: ${{ vars.TARGET_URLS }}
         run: ./eco_report --mode weekly
 

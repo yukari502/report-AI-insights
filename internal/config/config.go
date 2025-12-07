@@ -8,13 +8,14 @@ import (
 )
 
 type Config struct {
-	LLMApiKey        string
-	LLMApiURL        string
-	LLMCrawlerModel  string
-	LLMAnalyzerModel string
-	OutputLanguage   string
-	TargetURLs       []string
-	GithubToken      string
+	LLMApiKey         string
+	LLMCrawlerApiURL  string
+	LLMAnalyzerApiURL string
+	LLMCrawlerModel   string
+	LLMAnalyzerModel  string
+	OutputLanguage    string
+	TargetURLs        []string
+	GithubToken       string
 }
 
 func LoadConfig() (*Config, error) {
@@ -22,12 +23,22 @@ func LoadConfig() (*Config, error) {
 	_ = godotenv.Load()
 
 	cfg := &Config{
-		LLMApiKey:        os.Getenv("LLM_API_KEY"),
-		LLMApiURL:        os.Getenv("LLM_API_URL"),
-		LLMCrawlerModel:  os.Getenv("LLM_CRAWLER_MODEL"),
-		LLMAnalyzerModel: os.Getenv("LLM_ANALYZER_MODEL"),
-		OutputLanguage:   os.Getenv("OUTPUT_LANGUAGE"),
-		GithubToken:      os.Getenv("GITHUB_TOKEN"),
+		LLMApiKey:         os.Getenv("LLM_API_KEY"),
+		LLMCrawlerApiURL:  os.Getenv("LLM_CRAWLER_API_URL"),
+		LLMAnalyzerApiURL: os.Getenv("LLM_ANALYZER_API_URL"),
+		LLMCrawlerModel:   os.Getenv("LLM_CRAWLER_MODEL"),
+		LLMAnalyzerModel:  os.Getenv("LLM_ANALYZER_MODEL"),
+		OutputLanguage:    os.Getenv("OUTPUT_LANGUAGE"),
+		GithubToken:       os.Getenv("GITHUB_TOKEN"),
+	}
+
+	// Fallback for URLs
+	defaultURL := os.Getenv("LLM_API_URL")
+	if cfg.LLMCrawlerApiURL == "" {
+		cfg.LLMCrawlerApiURL = defaultURL
+	}
+	if cfg.LLMAnalyzerApiURL == "" {
+		cfg.LLMAnalyzerApiURL = defaultURL
 	}
 
 	if cfg.OutputLanguage == "" {
