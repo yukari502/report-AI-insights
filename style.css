@@ -48,21 +48,22 @@
 
 /* Dark Mode - Optional, but typically corporate sites stay light. 
    We will keep a dark mode but make it "Midnight Blue" inspired for continuity with users who want it. */
+/* Dark Mode - Pure Black Theme */
 [data-theme="dark"] {
-    --bg-primary: #001933;
-    /* Very Deep Blue */
-    --bg-secondary: #002D72;
-    /* Citi Blue */
-    --bg-tertiary: #003B8F;
+    --bg-primary: #050505;
+    /* Sidebar: Almost Black */
+    --bg-secondary: #000000;
+    /* Main Content: Pure Black */
+    --bg-tertiary: #1A1A1A;
     --text-primary: #FFFFFF;
     --text-body: #E0E0E0;
-    --text-secondary: #B0C4DE;
+    --text-secondary: #A0A0A0;
     --accent-color: #00A3E0;
-    /* Cyan pops on dark */
     --accent-hover: #33BEFF;
-    --border-color: #004080;
-    --card-bg: #002244;
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --border-color: #333333;
+    --card-bg: #111111;
+    /* Dark Gray Cards */
+    --card-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
 }
 
 * {
@@ -78,6 +79,54 @@ body {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+}
+
+/* ... (previous code) ... */
+
+/* Footer & Toggle */
+.sidebar-footer {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+    margin-top: auto;
+}
+
+#theme-toggle {
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: 8px;
+    /* Slightly rounded square */
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+#theme-toggle:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+    background: var(--bg-secondary);
+}
+
+/* Toggle Icons */
+#theme-toggle .sun-icon {
+    display: none;
+}
+
+#theme-toggle .moon-icon {
+    display: block;
+}
+
+[data-theme="dark"] #theme-toggle .sun-icon {
+    display: block;
+}
+
+[data-theme="dark"] #theme-toggle .moon-icon {
+    display: none;
 }
 
 /* Layout */

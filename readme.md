@@ -1,6 +1,6 @@
-# ECO 银行周报自动化系统技术文档
+# Research & Reports - AI Insights
 
-本文档详细描述 **ECO 银行周报** 的完整架构、工作流、核心组件及维护指南。
+本文档详细描述 **Research & Reports - AI Insights** 的完整架构、工作流、核心组件及维护指南。
 
 ---
 
@@ -18,7 +18,7 @@
 
 ## 1. 项目概述
 
-**ECO (Economic Crawler & Observer)** 是一个全自动化的金融研报聚合与分析系统。它旨在解决人工阅读海量银行研报效率低下的问题，通过自动化爬虫和 LLM 技术，实时捕捉、总结并发布各大金融机构（如 Citi, UBS）的市场观点。
+**Research & Reports - AI Insights** (原 ECO) 是一个全自动化的金融研报聚合与分析系统。它旨在解决人工阅读海量银行研报效率低下的问题，通过自动化爬虫和 LLM 技术，实时捕捉、总结并发布各大金融机构（如 Citi, UBS）的市场观点。
 
 ### 核心能力
 
@@ -196,4 +196,4 @@
 
 ---
 
-**© 2025 ECO Reports Team**
+**© 2025 Research & Reports Team**
