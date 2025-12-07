@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 	"time"
 
@@ -182,7 +183,13 @@ func (c *Client) callOpenAI(prompt, apiURL, model, apiKey string) (string, error
 		if len(chatResp.Choices) == 0 {
 			return "", fmt.Errorf("no response from OpenAI/DeepSeek: %s", string(body))
 		}
-		return chatResp.Choices[0].Message.Content, nil
+		content := chatResp.Choices[0].Message.Content
+
+		// Remove <think>...</think> blocks (common in DeepSeek R1/V3)
+		re := regexp.MustCompile(`(?s)<think>.*?</think>`)
+		content = re.ReplaceAllString(content, "")
+
+		return strings.TrimSpace(content), nil
 	})
 }
 
