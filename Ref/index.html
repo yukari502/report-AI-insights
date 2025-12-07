@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A personal blog about technology, AI, and software engineering.">
+    <title>D.RAY.</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Highlight.js for code syntax highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- Marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="/ico/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <div class="app-container">
+        <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Toggle Sidebar">
+            <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </button>
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">RAYS</div>
+                <button id="theme-toggle" aria-label="Toggle dark mode">
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home" class="nav-link active" data-target="home">Home</a></li>
+                    <li><a href="#about" class="nav-link" data-target="about">About</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-content">
+                <div class="sidebar-categories">
+                    <div class="categories-header" id="categories-toggle">
+                        <h3>Articles</h3>
+                        <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div id="categories-list" class="categories-list">
+                        <!-- Categories loaded via JS -->
+                    </div>
+                </div>
+                <div class="sidebar-pinned">
+                    <div class="pinned-header" id="pinned-toggle">
+                        <h3>Pinned</h3>
+                        <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div id="pinned-articles-list" class="pinned-list">
+                        <!-- Pinned articles loaded via JS -->
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <p>&copy; 2025 Yukari502. All rights reserved.</p>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <!-- Home Section -->
+            <section id="home" class="page-section active">
+                <div class="hero">
+                    <h1>D.RAY.</h1>
+                    <p class="subtitle">Exploring ideas, code,learning, and the future of tech.</p>
+                </div>
+
+                <div class="section-header">
+                    <h2>All Articles</h2>
+                    <div class="search-bar">
+                        <input type="text" id="search-input" placeholder="Search articles...">
+                    </div>
+                </div>
+                <div id="articles-list" class="articles-grid">
+                    <!-- Articles loaded via JS -->
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="page-section">
+                <div class="content-wrapper">
+                    <h2>About Me</h2>
+                    <div class="about-card">
+                        <p>
+                            我在学习多种语言，未来可能会分享一些与这些领域相关的文章。希望大家能在这里找到感兴趣的内容。
+                            <br>本网站作为记录，记录我所见所闻。
+                            <br>同时本网站也可以随意fork，包括其中所写文章，但所写仅代表个人观点，与任何组织无关，如有问题请联系我。
+
+                        </p>
+                        <div class="social-links">
+                            <a href="https://github.com/yukari502" target="_blank" class="social-btn">GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+
+
+            <!-- Article View (Hidden by default) -->
+            <section id="article-view" class="page-section">
+                <div class="article-container">
+                    <button id="back-button" class="back-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Back
+                    </button>
+                    <article id="markdown-content" class="markdown-body">
+                        <!-- Content loaded via JS -->
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

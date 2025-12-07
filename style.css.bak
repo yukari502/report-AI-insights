@@ -1,0 +1,525 @@
+/* Citi Corporate Theme - Clean, Professional, Blue/White */
+:root {
+    /* Brand Colors */
+    --citi-blue-dark: #002D72;
+    /* PMS 286 - Primary Brand Color */
+    --citi-blue-light: #00A3E0;
+    /* PMS Process Cyan - Accent */
+    --citi-gray-dark: #333333;
+    /* Text Body */
+    --citi-gray-medium: #63666A;
+    /* Text Secondary */
+    --citi-gray-light: #D9D9D6;
+    /* Borders */
+    --citi-bg-light: #F8F9FA;
+    /* Page Background */
+
+    /* Mapped Variables */
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8F9FA;
+    --bg-tertiary: #E9ECEF;
+
+    --text-primary: #002D72;
+    /* Headers are Blue */
+    --text-body: #333333;
+    /* Body text is Dark Gray */
+    --text-secondary: #595959;
+
+    --accent-color: #00A3E0;
+    --accent-hover: #0082B3;
+
+    --border-color: #E6E6E6;
+
+    --card-bg: #FFFFFF;
+    --card-shadow: 0 2px 8px rgba(0, 45, 114, 0.08);
+    /* Subtle blue-tinted shadow */
+    --card-shadow-hover: 0 8px 16px rgba(0, 45, 114, 0.12);
+
+    --sidebar-width: 260px;
+    --font-heading: 'Inter', sans-serif;
+    /* Clean corporate font */
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Markdown Specific */
+    --md-code-bg: #F5F7FA;
+    --md-blockquote-border: #00A3E0;
+}
+
+/* Dark Mode - Optional, but typically corporate sites stay light. 
+   We will keep a dark mode but make it "Midnight Blue" inspired for continuity with users who want it. */
+/* Dark Mode - Pure Black Theme */
+[data-theme="dark"] {
+    --bg-primary: #050505;
+    /* Sidebar: Almost Black */
+    --bg-secondary: #000000;
+    /* Main Content: Pure Black */
+    --bg-tertiary: #1A1A1A;
+    --text-primary: #FFFFFF;
+    --text-body: #E0E0E0;
+    --text-secondary: #A0A0A0;
+    --accent-color: #00A3E0;
+    --accent-hover: #33BEFF;
+    --border-color: #333333;
+    --card-bg: #111111;
+    /* Dark Gray Cards */
+    --card-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-secondary);
+    color: var(--text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* ... (previous code) ... */
+
+/* Footer & Toggle */
+.sidebar-footer {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+    margin-top: auto;
+}
+
+#theme-toggle {
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: 8px;
+    /* Slightly rounded square */
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+#theme-toggle:hover {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+    background: var(--bg-secondary);
+}
+
+/* Toggle Icons */
+#theme-toggle .sun-icon {
+    display: none;
+}
+
+#theme-toggle .moon-icon {
+    display: block;
+}
+
+[data-theme="dark"] #theme-toggle .sun-icon {
+    display: block;
+}
+
+[data-theme="dark"] #theme-toggle .moon-icon {
+    display: none;
+}
+
+/* Layout */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--bg-primary);
+    border-right: 1px solid var(--border-color);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    height: 100vh;
+    z-index: 100;
+}
+
+.sidebar-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--accent-color);
+    /* Citi red/blue line style */
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+.logo svg {
+    color: var(--accent-color);
+}
+
+.nav-link {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-left-color: var(--accent-color);
+}
+
+/* Sidebar Lists */
+.sidebar-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.section-header-small {
+    color: var(--text-primary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.category-header {
+    font-size: 0.9rem;
+    color: var(--text-body);
+    font-weight: 600;
+    padding: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s;
+}
+
+.category-header:hover {
+    color: var(--accent-color);
+}
+
+.category-sublist {
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--border-color);
+    margin-left: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-top: 0.2rem;
+}
+
+.category-sublist.collapsed {
+    display: none;
+}
+
+.article-link {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 0.2rem 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.article-link:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+/* Main Content */
+.content-area {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    padding: 3rem 4rem;
+    background-color: var(--bg-secondary);
+}
+
+.hero {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.hero h1 {
+    font-size: 2.8rem;
+    color: var(--text-primary);
+    line-height: 1.2;
+    font-weight: 300;
+    /* Citi uses lighter weights for large headers */
+}
+
+.hero h1 strong {
+    font-weight: 700;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    max-width: 600px;
+}
+
+/* Controls */
+.controls-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.controls-bar h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.controls-bar h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background-color: var(--accent-color);
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+.search-input {
+    width: 300px;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--text-body);
+    background: var(--bg-primary);
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    border-color: var(--text-primary);
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent-color);
+    width: 16px;
+    height: 16px;
+}
+
+/* Grid */
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    /* Clean border */
+    border-top: 4px solid transparent;
+    /* Prepare for hover */
+    border-radius: 2px;
+    /* Sharper corners */
+    box-shadow: var(--card-shadow);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 320px;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--card-shadow-hover);
+    border-top-color: var(--accent-color);
+}
+
+.card-meta {
+    font-size: 0.75rem;
+    color: var(--accent-color);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card h3 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    font-weight: 600;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    flex-grow: 1;
+    overflow: hidden;
+    position: relative;
+    /* Fade out effect logic if needed, but text-overflow is simpler */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.card-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-footer::after {
+    content: '→';
+    transition: transform 0.2s;
+}
+
+.card:hover .card-footer::after {
+    transform: translateX(4px);
+}
+
+/* Article Page Styling */
+.article-header {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 2rem;
+    margin-bottom: 3rem;
+}
+
+.article-title {
+    font-size: 2.2rem;
+    color: var(--text-primary);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.article-meta-large {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.markdown-body {
+    color: var(--text-body);
+    font-size: 1.05rem;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+    color: var(--text-primary);
+    margin-top: 2.5rem;
+}
+
+.markdown-body blockquote {
+    border-left-color: var(--accent-color);
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+.markdown-body a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.markdown-body a:hover {
+    text-decoration: underline;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CCCCCC;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+}
+
+/* Footer & Toggle */
+.sidebar-footer {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+    margin-top: auto;
+}
+
+#theme-toggle {
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    background: var(--bg-tertiary);
+    border: none;
+}
+
+#theme-toggle:hover {
+    color: var(--accent-color);
+}
+
+/* Clean UI tweaks */
+.chevron {
+    color: var(--text-secondary);
+}
