@@ -8,7 +8,7 @@ category: "UBS"
 
 # [Daily: Fed easing hopes rise ahead of US data](https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2025/latest-03122025.html)
 
-基于提供的金融研究文章，以下是对该文的总结分析。本文重点梳理了机构对于美联储政策、宏观经济数据、政治影响以及未来资产走势的看法。
+
 
 # 金融研究文章总结分析
 

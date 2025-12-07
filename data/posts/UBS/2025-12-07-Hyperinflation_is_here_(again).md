@@ -8,7 +8,7 @@ category: "UBS"
 
 # [Hyperinflation is here (again)](https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/articles-adp/global/en/wealthmanagement/insights/chief-investment-office/market-insights/paul-donovan/2025/weekly/hyperinflation.html?caasID=CAAS-ActivityStream)
 
-基于您提供的金融研究文章片段（来自CIO Daily Updates/Paul's daily investment views），以下是对该文章的总结分析：
+
 
 ## 金融研究文章总结分析
 

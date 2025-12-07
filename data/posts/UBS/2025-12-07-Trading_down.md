@@ -8,7 +8,7 @@ category: "UBS"
 
 # [Trading down](https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/articles-adp/global/en/wealthmanagement/insights/chief-investment-office/market-insights/paul-donovan/2025/weekly/trading-down.html?caasID=CAAS-ActivityStream)
 
-基于您提供的《Weekly Updates》文章内容，以下是针对该金融研究的总结分析。请注意，原文篇幅较短，主要聚焦于消费者行为与通胀数据的关系，未直接涉及进出口、PPI数据或具体的半年/一年量化预测，以下总结严格基于原文内容进行提炼。
+
 
 # 金融研究文章总结：消费降级（Trading Down）与隐形购买力
 

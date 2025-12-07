@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UBS Client Portal - ECO Reports</title>
+    <meta name="description" content="UBS Client Portal">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../../style.css">
+
+    <!-- Syntax Highlighting -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌿</text></svg>">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                    </svg>
+                    ECO <span>Reports</span>
+                </div>
+                <button id="theme-toggle" aria-label="Toggle Theme">
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- Navigation -->
+                <nav>
+                    <ul>
+                        <li><a href="../../../index.html" class="nav-link">← Back to Dashboard</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Static info for article page -->
+                <div style="padding: 1rem 0; opacity: 0.7; font-size: 0.85rem;">
+                    <p>Current View:</p>
+                    <p style="color: var(--accent-color); font-weight: 600; margin-top: 0.2rem;">Article Reader</p>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <p>&copy; 2025 ECO Reports</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content-area">
+            <button id="sidebar-toggle" style="display: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+
+            <article class="article-content">
+                <header class="article-header">
+                    <h1 class="article-title">UBS Client Portal</h1>
+                    <div class="article-meta-large">
+                        <span class="article-category">UBS</span>
+                        <span>•</span>
+                        <span>2025-12-07</span>
+                    </div>
+                </header>
+
+                <div id="content" class="markdown-body">
+                    <!-- Markdown rendered via JS -->
+                    <p style="opacity: 0.6;">Loading article...</p>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <!-- Hidden Source for any client-side hydration if needed, though we injected content directly -->
+    <div id="markdown-source" style="display:none;">
+
+# [UBS Client Portal](http://clientportal.ibb.ubs.com)
+
+**基于UBS客户门户登录帮助文档的总结**
+
+**文章性质说明**
+*   所提供的文本内容并非一篇金融研究或评论文章，而是一份关于如何登录瑞银（UBS）在线客户门户“UBS Neo”的技术性帮助和指南文档。
+
+**文档内容概括**
+*   该文档详细说明了用户在登录“UBS Client Portal”时可能遇到的各种情况及对应解决方案，包括：
+    *   **登录方式**：支持使用注册邮箱配合密码登录，或通过向注册邮箱发送一次性验证码（Login Code）进行无密码登录。
+    *   **账户锁定**：多次输入错误登录信息会导致账户被锁定，解锁需联系“UBS Neo Help”。
+    *   **密码管理**：
+        *   系统要求每6个月更新一次密码，并会提前两周通知用户。
+        *   对新设密码有严格的安全要求，例如长度、字符类型、不能与用户名或常见密码相同等。
+    *   **双因素认证**：为增强安全，可能引导用户设置双因素认证（2-Factor Authentication）。
+    *   **设备记忆**：用户可以选择让系统记住登录设备以方便下次访问，但文档建议在公共或共享设备上不要使用此功能。
+    *   **寻求帮助**：文档中反复出现遇到问题时联系“UBS Neo Help”或客户瑞银销售代表（UBS sales representative）的指引。
+
+**核心主题**
+*   全文核心是**指导用户安全、合规地访问瑞银的在线服务平台**，重点在于**账户安全**和**操作流程说明**。
+
+**重要提示**
+*   由于原文并非金融研究报告，因此**完全无法提取**关于以下任何方面的信息、看法或推理：
+    1.  各大银行和金融机构对任何经济或市场事件的看法。
+    2.  对未来市场（半年或一年）走势的任何推测。
+    3.  对行业形势、局势安全、进出口、PPI、CPI等宏观经济指标的分析或预测。
+    4.  任何形式的投资建议。
+*   本文档不包含任何金融或经济分析内容。
+</div>
+
+    <script src="../../../script.js"></script>
+    <script>
+        // Syntax Highlight Init
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('pre code').forEach((el) => {
+                hljs.highlightElement(el);
+            });
+        });
+    </script>
+</body>
+
+</html>

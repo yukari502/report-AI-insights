@@ -235,6 +235,13 @@ category: "%s"
 	return nil
 }
 
+// ShowHistory prints the current history statistics
+func (g *Generator) ShowHistory() {
+	log.Printf("=== History Stats ===")
+	log.Printf("Crawled URLs: %d", len(g.history.Crawled))
+	log.Printf("Summarized URLs: %d", len(g.history.Summarized))
+}
+
 func sanitizeFilename(s string) string {
 	s = strings.ReplaceAll(s, "https://", "")
 	s = strings.ReplaceAll(s, "http://", "")

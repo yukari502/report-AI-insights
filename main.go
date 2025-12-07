@@ -51,6 +51,9 @@ func runWeekly(cfg *config.Config, step string) {
 		if err := site.GenerateSite("data/posts", "."); err != nil {
 			log.Fatalf("Site generation failed: %v", err)
 		}
+	case "history":
+		log.Println("Step: Checking History...")
+		gen.ShowHistory()
 	case "all":
 		log.Println("Running Full Weekly Workflow...")
 		if err := gen.FetchAll(); err != nil {

@@ -8,7 +8,7 @@ category: "UBS"
 
 # [The hassle of the side hustle](https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/articles-adp/global/en/wealthmanagement/insights/chief-investment-office/market-insights/paul-donovan/2025/weekly/side-hustle.html?caasID=CAAS-ActivityStream)
 
-基于您提供的《Weekly Updates》文章内容，以下是针对该金融研究的总结分析。请注意，由于原文仅聚焦于“零工经济（Side Hustle）”、广告行业变革及宏观数据统计偏差，未涉及地缘安全、进出口具体数据、PPI或CPI的具体数值，本总结将忠实于原文涵盖的范畴进行概括。
+
 
 # 金融研究文章总结分析：零工经济与宏观数据偏差
 

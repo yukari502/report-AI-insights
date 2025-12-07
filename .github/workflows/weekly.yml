@@ -24,17 +24,29 @@ jobs:
           go-version: '1.21'
           
       - name: Build
-        run: go build -o eco_report cmd/app/main.go
+        run: go build -o eco_report main.go
         
       - name: Generate Report
         env:
-          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_CRAWLER_API_KEY: ${{ secrets.LLM_CRAWLER_API_KEY }}
+          LLM_ANALYZER_API_KEY: ${{ secrets.LLM_ANALYZER_API_KEY }}
           LLM_CRAWLER_API_URL: ${{ vars.LLM_CRAWLER_API_URL }}
           LLM_ANALYZER_API_URL: ${{ vars.LLM_ANALYZER_API_URL }}
           LLM_CRAWLER_MODEL: ${{ vars.LLM_CRAWLER_MODEL }}
           LLM_ANALYZER_MODEL: ${{ vars.LLM_ANALYZER_MODEL }}
           TARGET_URLS: ${{ vars.TARGET_URLS }}
-        run: ./eco_report --mode weekly
+          EMAIL_SENDER_PASSWORD: ${{ secrets.EMAIL_SENDER_PASSWORD }}
+          EMAIL_SENDER_ADDRESS: ${{ secrets.EMAIL_SENDER_ADDRESS }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+        run: ./eco_report --mode weekly --step all
+        
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/
+          git commit -m "Auto-generated report [skip ci]" || exit 0
+          git push
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

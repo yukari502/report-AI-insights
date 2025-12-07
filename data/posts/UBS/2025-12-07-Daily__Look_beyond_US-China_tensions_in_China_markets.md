@@ -8,7 +8,7 @@ category: "UBS"
 
 # [Daily: Look beyond US-China tensions in China markets](https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2025/latest-05122025.html)
 
-基于提供的金融研究文章，以下是对该文的总结分析。本文着重于地缘政治背景下的市场反应、行业深度逻辑推理以及金融机构对未来的投资展望。
+
 
 # 金融研究文章总结分析：美中科技博弈下的中国市场机遇
 

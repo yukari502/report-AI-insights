@@ -8,7 +8,7 @@ category: "UBS"
 
 # [UBS CIO House View | Key messages](https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/2025/weekly-key-messages.html)
 
-这份总结报告基于提供的金融研究文章撰写，重点梳理了机构对于宏观经济、市场策略及地缘政治的观点与预测。
+
 
 # 金融市场研究报告摘要与分析
 

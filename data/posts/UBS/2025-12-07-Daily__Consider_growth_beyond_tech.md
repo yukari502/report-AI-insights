@@ -8,7 +8,7 @@ category: "UBS"
 
 # [Daily: Consider growth beyond tech](https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/house-view/daily/2025/latest-04122025.html)
 
-以下是对该金融研究文章的总结分析：
+
 
 # 金融市场研究与行业趋势分析总结
 

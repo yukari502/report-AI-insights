@@ -8,7 +8,6 @@ category: "UBS"
 
 # [Consuming savings](https://www.ubs.com/global/en/wealthmanagement/insights/chief-investment-office/articles-adp/global/en/wealthmanagement/insights/chief-investment-office/market-insights/paul-donovan/2025/consuming-savings.html?caasID=CAAS-ActivityStream)
 
-基于提供的金融研究文章（Daily Update by Paul Donovan），以下是对该文章的总结分析。本总结完全基于原文内容，不包含任何外部观点。
 
 # 金融研究文章总结分析
 
