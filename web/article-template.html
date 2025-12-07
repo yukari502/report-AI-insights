@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{TITLE} - ECO Reports</title>
+    <meta name="description" content="{DESCRIPTION}">
+    <link rel="stylesheet" href="{ROOT_PATH}style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="{ROOT_PATH}index.html">ECO Reports</a></h1>
+        </div>
+    </header>
+
+    <main class="container article-container">
+        <article>
+            <header class="article-header">
+                <h1 class="article-title">{TITLE}</h1>
+                <div class="article-meta">
+                    <span class="date">{DATE}</span>
+                    <span class="category">{CATEGORY}</span>
+                </div>
+            </header>
+
+            <div id="content" class="markdown-body">
+                <!-- Content will be rendered here -->
+            </div>
+
+            <!-- Hidden source for JS to pick up -->
+            <div id="markdown-source" style="display:none;">
+                {CONTENT}
+            </div>
+        </article>
+    </main>
+
+    <script src="{ROOT_PATH}script.js"></script>
+</body>
+
+</html>
